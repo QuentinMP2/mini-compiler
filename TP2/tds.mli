@@ -14,7 +14,7 @@ type info =
 type tds 
 
 (* Données stockées dans la tds et dans les AST : pointeur sur une information *)
-type info_ast
+type info_ast = info ref 
 
 (* Création d'une table des symboles à la racine *)
 val creerTDSMere : unit -> tds 
