@@ -174,8 +174,9 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction (t, n, lp, li)) =
     | Some _ -> raise (DoubleDeclaration nn)
     | None ->
       let infoparam = InfoVar (nn, tt, 0, "") in
-      ajouter tds nn (ref infoparam);
-      (tt, ref infoparam)
+      let ria = ref infoparam in
+      ajouter tds nn ria;
+      (tt, ria)
   in
   let tds_fonction = creerTDSFille maintds in
   match chercherGlobalement maintds n with

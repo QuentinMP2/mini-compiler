@@ -120,9 +120,9 @@ let analyse_type_fonction (AstTds.Fonction (_, info, lp, li)) =
              acc x ->
         let t, i = x in
         match !i with
-        | InfoVar (nom, _, depl, nomReg) ->
-          let ni = ref (InfoVar (nom, t, depl, nomReg)) in
-          acc @ [ ni ]
+        | InfoVar _ ->
+          modifier_type_variable t i;
+          acc @ [ i ]
         | _ -> failwith "erreur interne")
       [] lp
   in

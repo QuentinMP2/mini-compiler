@@ -1,5 +1,3 @@
-(* Fonctions de service pour générer des instructions TAM. *)
-
 (*
 LOAD (int) int[reg]
 LOADA int[reg]

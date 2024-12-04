@@ -1,7 +1,9 @@
 open Tds
-open Exceptions
 open Ast
 open Type
+
+type t1 = Ast.AstType.programme
+type t2 = Ast.AstPlacement.programme
 
 (* AstType.instruction -> int -> string -> AstPlacement.instruction * int *)
 (* instruction, depl, reg -> instruction * taille *)
@@ -10,26 +12,24 @@ let rec analyse_placement_instruction i depl reg =
   | AstType.Declaration (info, e) -> begin
     (* récupérer le type t dans l'info i *)
     match !info with
-    | InfoVar (n, t, _, _) ->
+    | InfoVar (_, t, _, _) ->
       (* ajouter depl[reg] dans l'info i *)
-      let new_info = InfoVar (n, t, depl, reg) in
-      (AstPlacement.Declaration (ref new_info, e), getTaille t)
+      modifier_adresse_variable depl reg info;
+      (AstPlacement.Declaration (info, e), getTaille t)
     | _ -> failwith "erreur interne"
   end
   | AstType.Conditionnelle (c, t, e) ->
-    (*  *)
     let nt = analyse_placement_bloc t depl reg in
     let ne = analyse_placement_bloc e depl reg in
     (AstPlacement.Conditionnelle (c, nt, ne), 0)
   | AstType.TantQue (c, b) ->
-    (* comme au dessus *)
     let nb = analyse_placement_bloc b depl reg in
     (AstPlacement.TantQue (c, nb), 0)
   | AstType.Retour (e, ia) -> begin
     match !ia with
     | InfoFun (_, t, ltp) ->
       let tp = List.fold_left (fun acc x -> getTaille x + acc) 0 ltp in
-      (AstPlacement.Retour (e, getTaille t, depl), 0)
+      (AstPlacement.Retour (e, getTaille t, tp), 0)
     | _ -> failwith "erreur interne"
   end
   | AstType.Affectation (ia, e) -> (AstPlacement.Affectation (ia, e), 0)
@@ -57,16 +57,21 @@ and analyse_placement_bloc li depl reg =
 
 let analyse_placement_fonction (AstType.Fonction (info, lp, li)) =
   (* analyser les paramètres : TODO *)
-  let rec analyse_placement_param lp dep =
-    match lp with
-    | [] -> 0
-    | i::q ->
-      let tailleq = analyse_placement_param q in
-      let taillei = taille du type dans i in
-      modifier adresse de i à -(tailleq+taillei)[LB]
-
-    let nb = analyse_deplacement_bloc li 3 "LB"
-    AstPlacement.Fonction(i, lp, nb)
+  let rec analyse_placement_param slp =
+    match slp with
+    | [] -> (0, [])
+    | i :: q -> (
+      let tailleq, naccp = analyse_placement_param q in
+      match !i with
+      | InfoVar (_, t, _, _) ->
+        let taillei = getTaille t in
+        modifier_adresse_variable (-(taillei + tailleq)) "LB" i;
+        (tailleq + taillei, i :: naccp)
+      | _ -> failwith "erreur interne")
+  in
+  let _, nlp = analyse_placement_param lp in
+  let nb = analyse_placement_bloc li 3 "LB" in
+  AstPlacement.Fonction (info, nlp, nb)
 
 (* AstType.programme -> AstPlacement.programme *)
 let analyser (AstType.Programme (fonctions, prog)) =
