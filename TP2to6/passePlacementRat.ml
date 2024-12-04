@@ -56,22 +56,22 @@ and analyse_placement_bloc li depl reg =
     (ni :: nli, ti + tb)
 
 let analyse_placement_fonction (AstType.Fonction (info, lp, li)) =
-  (* analyser les paramètres : TODO *)
+  (* analyser les paramètres *)
   let rec analyse_placement_param slp =
     match slp with
-    | [] -> (0, [])
+    | [] -> 0
     | i :: q -> (
-      let tailleq, naccp = analyse_placement_param q in
+      let tailleq = analyse_placement_param q in
       match !i with
       | InfoVar (_, t, _, _) ->
         let taillei = getTaille t in
         modifier_adresse_variable (-(taillei + tailleq)) "LB" i;
-        (tailleq + taillei, i :: naccp)
+        tailleq + taillei
       | _ -> failwith "erreur interne")
   in
-  let _, nlp = analyse_placement_param lp in
+  let _ = analyse_placement_param lp in
   let nb = analyse_placement_bloc li 3 "LB" in
-  AstPlacement.Fonction (info, nlp, nb)
+  AstPlacement.Fonction (info, lp, nb)
 
 (* AstType.programme -> AstPlacement.programme *)
 let analyser (AstType.Programme (fonctions, prog)) =
