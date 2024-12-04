@@ -1,2 +1,6 @@
 profile = default
 version = 0.26.2
+
+cases-exp-indent = 2
+cases-matching-exp-indent = compact
+exp-grouping = preserve

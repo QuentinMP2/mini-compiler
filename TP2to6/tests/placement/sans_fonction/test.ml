@@ -13,11 +13,11 @@ let getListeDep ratfile =
     listeAdresses
   with
   | Lexer.Error _ as e ->
-      report_error ratfile filebuf "lexical error (unexpected character).";
-      raise e
+    report_error ratfile filebuf "lexical error (unexpected character).";
+    raise e
   | Parser.Error as e ->
-      report_error ratfile filebuf "syntax error.";
-      raise e
+    report_error ratfile filebuf "syntax error.";
+    raise e
 
 (* teste si dans le fichier fichier, dans la fonction fonction (main pour programme principal)
    la occ occurence de la variable var a l'adresse dep[registre]

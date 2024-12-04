@@ -172,9 +172,9 @@ let rec chercherGlobalement tds nom =
   match tds with
   | Nulle -> None
   | Courante (m, c) -> (
-      match find_opt c nom with
-      | Some _ as i -> i
-      | None -> chercherGlobalement m nom)
+    match find_opt c nom with
+    | Some _ as i -> i
+    | None -> chercherGlobalement m nom)
 
 (* TESTS *)
 
@@ -300,27 +300,26 @@ let string_of_info info =
   match info with
   | InfoConst (n, value) -> "Constante " ^ n ^ " : " ^ string_of_int value
   | InfoVar (n, t, dep, base) ->
-      "Variable " ^ n ^ " : " ^ string_of_type t ^ " " ^ string_of_int dep ^ "["
-      ^ base ^ "]"
+    "Variable " ^ n ^ " : " ^ string_of_type t ^ " " ^ string_of_int dep ^ "["
+    ^ base ^ "]"
   | InfoFun (n, t, tp) ->
-      "Fonction " ^ n ^ " : "
-      ^ List.fold_right
-          (fun elt tq ->
-            if tq = "" then string_of_type elt
-            else string_of_type elt ^ " * " ^ tq)
-          tp ""
-      ^ " -> " ^ string_of_type t
+    "Fonction " ^ n ^ " : "
+    ^ List.fold_right
+        (fun elt tq ->
+          if tq = "" then string_of_type elt
+          else string_of_type elt ^ " * " ^ tq)
+        tp ""
+    ^ " -> " ^ string_of_type t
 
 (* Affiche la tds locale *)
 let afficher_locale tds =
   match tds with
   | Nulle -> print_newline ()
   | Courante (_, c) ->
-      Hashtbl.iter
-        (fun n info ->
-          print_string
-            (n ^ " : " ^ string_of_info (info_ast_to_info info) ^ "\n"))
-        c
+    Hashtbl.iter
+      (fun n info ->
+        print_string (n ^ " : " ^ string_of_info (info_ast_to_info info) ^ "\n"))
+      c
 
 (* Affiche la tds locale et récursivement *)
 let afficher_globale tds =
@@ -328,16 +327,16 @@ let afficher_globale tds =
     match tds with
     | Nulle -> print_newline ()
     | Courante (m, c) ->
-        if Hashtbl.length c = 0 then print_string (indent ^ "<empty>\n")
-        else
-          Hashtbl.iter
-            (fun n info ->
-              print_string
-                (indent ^ n ^ " : "
-                ^ string_of_info (info_ast_to_info info)
-                ^ "\n"))
-            c;
-        afficher m (indent ^ "  ")
+      if Hashtbl.length c = 0 then print_string (indent ^ "<empty>\n")
+      else
+        Hashtbl.iter
+          (fun n info ->
+            print_string
+              (indent ^ n ^ " : "
+              ^ string_of_info (info_ast_to_info info)
+              ^ "\n"))
+          c;
+      afficher m (indent ^ "  ")
   in
   afficher tds ""
 

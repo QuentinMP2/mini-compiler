@@ -88,11 +88,11 @@ let compiler ratfile =
     "; " ^ ratfile ^ "\n" ^ CompilateurRat.analyser ast
   with
   | Lexer.Error _ as e ->
-      report_error ratfile filebuf "lexical error (unexpected character).";
-      raise e
+    report_error ratfile filebuf "lexical error (unexpected character).";
+    raise e
   | Parser.Error as e ->
-      report_error ratfile filebuf "syntax error.";
-      raise e
+    report_error ratfile filebuf "syntax error.";
+    raise e
 
 (* compilerVersFichier : string -> string -> () *)
 (* Compiler un code rat en un code TAM et le sauve dans un fichier *)

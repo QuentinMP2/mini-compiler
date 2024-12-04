@@ -48,41 +48,41 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
   let rec string_of_expression e =
     match e with
     | AppelFonction (n, le) ->
-        "call " ^ n ^ "("
-        ^ List.fold_right (fun i tq -> string_of_expression i ^ tq) le ""
-        ^ ") "
+      "call " ^ n ^ "("
+      ^ List.fold_right (fun i tq -> string_of_expression i ^ tq) le ""
+      ^ ") "
     | Ident n -> n ^ " "
     | Booleen b -> if b then "true " else "false "
     | Entier i -> string_of_int i ^ " "
     | Unaire (op, e1) -> string_of_unaire op ^ string_of_expression e1 ^ " "
     | Binaire (b, e1, e2) -> (
-        match b with
-        | Fraction ->
-            "[" ^ string_of_expression e1 ^ "/" ^ string_of_expression e2 ^ "] "
-        | _ ->
-            string_of_expression e1 ^ string_of_binaire b
-            ^ string_of_expression e2 ^ " ")
+      match b with
+      | Fraction ->
+        "[" ^ string_of_expression e1 ^ "/" ^ string_of_expression e2 ^ "] "
+      | _ ->
+        string_of_expression e1 ^ string_of_binaire b ^ string_of_expression e2
+        ^ " ")
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
     match i with
     | Declaration (t, n, e) ->
-        "Declaration  : " ^ string_of_type t ^ " " ^ n ^ " = "
-        ^ string_of_expression e ^ "\n"
+      "Declaration  : " ^ string_of_type t ^ " " ^ n ^ " = "
+      ^ string_of_expression e ^ "\n"
     | Affectation (n, e) ->
-        "Affectation  : " ^ n ^ " = " ^ string_of_expression e ^ "\n"
+      "Affectation  : " ^ n ^ " = " ^ string_of_expression e ^ "\n"
     | Constante (n, i) -> "Constante  : " ^ n ^ " = " ^ string_of_int i ^ "\n"
     | Affichage e -> "Affichage  : " ^ string_of_expression e ^ "\n"
     | Conditionnelle (c, t, e) ->
-        "Conditionnelle  : IF " ^ string_of_expression c ^ "\n" ^ "THEN \n"
-        ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) t ""
-        ^ "ELSE \n"
-        ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) e ""
-        ^ "\n"
+      "Conditionnelle  : IF " ^ string_of_expression c ^ "\n" ^ "THEN \n"
+      ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) t ""
+      ^ "ELSE \n"
+      ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) e ""
+      ^ "\n"
     | TantQue (c, b) ->
-        "TantQue  : TQ " ^ string_of_expression c ^ "\n" ^ "FAIRE \n"
-        ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) b ""
-        ^ "\n"
+      "TantQue  : TQ " ^ string_of_expression c ^ "\n" ^ "FAIRE \n"
+      ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) b ""
+      ^ "\n"
     | Retour e -> "Retour  : RETURN " ^ string_of_expression e ^ "\n"
 
   (* Conversion des fonctions *)

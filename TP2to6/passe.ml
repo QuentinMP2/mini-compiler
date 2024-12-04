@@ -70,14 +70,14 @@ module VerifPlacement = struct
   let rec analyser_instruction i =
     match i with
     | Ast.AstPlacement.Declaration (info, _) -> (
-        match Tds.info_ast_to_info info with
-        | InfoVar (n, _, d, r) -> [ (n, (d, r)) ]
-        | _ -> [])
+      match Tds.info_ast_to_info info with
+      | InfoVar (n, _, d, r) -> [ (n, (d, r)) ]
+      | _ -> [])
     | Ast.AstPlacement.Conditionnelle (_, (bt, _), (be, _)) ->
-        List.flatten (List.map analyser_instruction bt)
-        @ List.flatten (List.map analyser_instruction be)
+      List.flatten (List.map analyser_instruction bt)
+      @ List.flatten (List.map analyser_instruction be)
     | Ast.AstPlacement.TantQue (_, (b, _)) ->
-        List.flatten (List.map analyser_instruction b)
+      List.flatten (List.map analyser_instruction b)
     | _ -> []
 
   let analyser_param info =
@@ -92,11 +92,11 @@ module VerifPlacement = struct
       il faudra écrire un programme qui renvoie le paramètre *)
     match info_ast_to_info info with
     | InfoFun (n, _, _) ->
-        [
-          ( n,
-            List.flatten (List.map analyser_param lp)
-            @ List.flatten (List.map analyser_instruction li) );
-        ]
+      [
+        ( n,
+          List.flatten (List.map analyser_param lp)
+          @ List.flatten (List.map analyser_instruction li) );
+      ]
     | _ -> failwith "Internal error"
 
   (* Renvoie la suite des adresses des variables déclarées dans les fonctions et dans le programme principal *)
