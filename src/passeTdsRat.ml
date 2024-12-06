@@ -7,13 +7,36 @@ open Ast
 type t1 = Ast.AstSyntax.programme
 type t2 = Ast.AstTds.programme
 
+
+(* analyse_tds_affectable : tds -> info_ast option -> AstSyntax.affectable -> AstTds.affectable *)
+(* Paramètre tds : la table des symboles courante *)
+(* Paramètre a : l'affectable à analyser *)
+(* Vérifie la bonne utilisation des affectables et tranforme l'affectable
+   en un affectable de type AstTds.affectable *)
+(* Erreur si mauvaise utilisation des identifiants *)
+let analyse_tds_affectable tds a en_ecriture =
+  match a with
+  | AstSyntax.Ident n -> begin
+    match chercherGlobalement tds n with
+    | None -> raise (IdentifiantNonDeclare n)
+    | Some info -> begin
+      match !info with
+      | InfoVar _ -> AstTds.Ident info
+      | InfoConst _ -> 
+        if en_ecriture then 
+          raise (MauvaiseUtilisationIdentifiant n) 
+        else 
+          AstTds.Ident info
+      | _ -> raise (MauvaiseUtilisationIdentifiant n)
+    end
+  end
+
 (* analyse_tds_expression : tds -> AstSyntax.expression -> AstTds.expression *)
 (* Paramètre tds : la table des symboles courante *)
 (* Paramètre e : l'expression à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme l'expression
    en une expression de type AstTds.expression *)
 (* Erreur si mauvaise utilisation des identifiants *)
-
 let rec analyse_tds_expression tds e =
   match e with
   | AstSyntax.AppelFonction (id, le) -> begin
@@ -25,15 +48,16 @@ let rec analyse_tds_expression tds e =
         AstTds.AppelFonction (info, List.map (analyse_tds_expression tds) le)
       | _ -> raise (MauvaiseUtilisationIdentifiant id))
   end
-  | AstSyntax.Ident n -> begin
-    match chercherGlobalement tds n with
-    | None -> raise (IdentifiantNonDeclare n)
-    | Some info -> begin
+  | AstSyntax.Affectable a -> begin
+    let na = analyse_tds_affectable tds a false in
+    match na with
+    | AstTds.Ident info -> begin
       match !info with
-      | InfoVar _ -> AstTds.Ident info
       | InfoConst (_, value) -> AstTds.Entier value
-      | _ -> raise (MauvaiseUtilisationIdentifiant n)
+      | _ -> AstTds.Affectable na
     end
+    (* | _ -> AstTds.Affectable na *)
+    
   end
   | AstSyntax.Binaire (b, e1, e2) ->
     AstTds.Binaire
@@ -75,7 +99,12 @@ let rec analyse_tds_instruction tds oia i =
          il a donc déjà été déclaré dans le bloc courant *)
       raise (DoubleDeclaration n)
   end
-  | AstSyntax.Affectation (n, e) -> begin
+  | AstSyntax.Affectation (a, e) -> begin
+    let na = analyse_tds_affectable tds a true in
+    let ne = analyse_tds_expression tds e in
+    AstTds.Affectation (na, ne)
+  end
+  (* | AstSyntax.Affectation (n, e) -> begin
     match chercherGlobalement tds n with
     | None ->
       (* L'identifiant n'est pas trouvé dans la tds globale. *)
@@ -94,7 +123,7 @@ let rec analyse_tds_instruction tds oia i =
       | _ ->
         (* Modification d'une constante ou d'une fonction *)
         raise (MauvaiseUtilisationIdentifiant n))
-  end
+  end *)
   | AstSyntax.Constante (n, v) -> begin
     match chercherLocalement tds n with
     | None ->
