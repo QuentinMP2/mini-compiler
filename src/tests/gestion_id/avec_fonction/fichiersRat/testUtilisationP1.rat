@@ -1,0 +1,8 @@
+bool suis_je_content (int a) {
+    bool pas-content = false;
+    return pas-content;
+}
+
+test {
+    bool *pointeur_est_content = &suis_je_content(31);
+}

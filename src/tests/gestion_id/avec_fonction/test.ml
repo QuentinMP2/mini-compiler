@@ -139,7 +139,17 @@ let%test_unit "testUtilisation27" =
   let _ = compiler (pathFichiersRat ^ "testUtilisation27.rat") in
   ()
 
+let%test_unit "testUtilisationP1" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testUtilisationP1.rat") in
+    raise ErreurNonDetectee
+  with MauvaiseUtilisationIdentifiant "suis_je_content" -> ()
+
 let%test_unit "testDeclarationFonction" =
+  let _ = compiler (pathFichiersRat ^ "testDeclarationFonction.rat") in
+  ()
+
+let%test_unit "testDeclarationFonctionP1" =
   let _ = compiler (pathFichiersRat ^ "testDeclarationFonction.rat") in
   ()
 

@@ -35,6 +35,14 @@ let%test_unit "testAffectation4" =
     raise ErreurNonDetectee
   with MauvaiseUtilisationIdentifiant "x" -> ()
 
+let%test_unit "testAffectationP1" =
+  let _ = compiler (pathFichiersRat ^ "testAffectationP1.rat") in
+  ()
+
+let%test_unit "testAffectationP2" =
+  let _ = compiler (pathFichiersRat ^ "testAffectationP2.rat") in
+  ()
+
 let%test_unit "testUtilisation1" =
   let _ = compiler (pathFichiersRat ^ "testUtilisation1.rat") in
   ()
@@ -108,6 +116,16 @@ let%test_unit "testUtilisation19" =
     let _ = compiler (pathFichiersRat ^ "testUtilisation19.rat") in
     raise ErreurNonDetectee
   with IdentifiantNonDeclare "y" -> ()
+
+let%test_unit "testUtilisationP1" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testUtilisationP1.rat") in
+    raise ErreurNonDetectee
+  with IdentifiantNonDeclare "y" -> ()
+
+let%test_unit "testUtilisationP2" =
+  let _ = compiler (pathFichiersRat ^ "testUtilisationP2.rat") in
+  ()
 
 let%test_unit "testRecursiviteVariable" =
   try

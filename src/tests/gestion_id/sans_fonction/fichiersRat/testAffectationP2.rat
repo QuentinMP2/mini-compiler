@@ -1,0 +1,5 @@
+test {
+    rat x = [2/3];
+    rat* y = &x;
+    rat** z = &y;
+}

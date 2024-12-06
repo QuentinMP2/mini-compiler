@@ -1,0 +1,8 @@
+test {
+    int z = 5;
+    if (z < 0) {
+        bool y = false;
+    } else {
+        int* x = *y;
+    }
+}

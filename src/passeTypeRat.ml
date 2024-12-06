@@ -112,33 +112,45 @@ let rec analyse_type_instruction i =
       (* Les types sont compatibles *)
       AstType.Affectation (na, ne)
     else
+      (* Les types sont incompatibles *)
       raise (TypeInattendu (net, nat))
   end
   | AstTds.Affichage e -> begin
-    let ne, netyp = analyse_type_expression e in
-    match netyp with
+    (* On analyse l'expression *)
+    let ne, nt = analyse_type_expression e in
+    (* On resout la surcharge d'affichage *)
+    match nt with
     | Int -> AstType.AffichageInt ne
     | Bool -> AstType.AffichageBool ne
     | Rat -> AstType.AffichageRat ne
     | _ -> failwith  "erreur interne" (* Cas normalement impossible *)
   end
   | AstTds.Conditionnelle (c, t, e) ->
-    let nc, nctyp = analyse_type_expression c in
-    if nctyp = Bool then
+    (* On analyse l'expression *)
+    let nc, nct = analyse_type_expression c in
+    (* la conditionnelle est forcement de type booléenne *)
+    if nct = Bool then
+      (* si on a bien un booléen *)
       let nbt = analyse_type_bloc t in
       let nbe = analyse_type_bloc e in
       AstType.Conditionnelle (nc, nbt, nbe)
-    else raise (TypeInattendu (nctyp, Bool))
+    else raise (TypeInattendu (nct, Bool))
   | AstTds.TantQue (c, b) ->
+    (* On analyse l'expression *)
     let nc, nctyp = analyse_type_expression c in
-    if nctyp = Bool then AstType.TantQue (nc, analyse_type_bloc b)
-    else raise (TypeInattendu (nctyp, Bool))
+    if nct = Bool then 
+    (* La condition est forcément de type bool *)
+      AstType.TantQue (nc, analyse_type_bloc b)
+    else raise (TypeInattendu (nct, Bool))
   | AstTds.Retour (e, ia) -> begin
-    let ne, netyp = analyse_type_expression e in
+    (* On analyse l'expression et on recupere le type de l'expression que va retourner la fonction 
+      pour le comparer au type de retour de la fonction *)
+    let ne, nt = analyse_type_expression e in
     match !ia with
     | InfoFun (_, typret, _) ->
-      if not (est_compatible typret netyp) then
-        raise (TypeInattendu (netyp, typret))
+      if not (est_compatible typret nt) then
+        (* Le type de l'expression de retour est incompatible avec le type de retour de la fonction *)
+        raise (TypeInattendu (nt, typret))
       else AstType.Retour (ne, ia)
     | _ -> failwith  "erreur interne" (* Cas normalement impossible *)
   end
@@ -167,6 +179,7 @@ let analyse_type_fonction (AstTds.Fonction (_, info, lp, li)) =
         let t, i = x in
         match !i with
         | InfoVar _ ->
+          (* On modifie le type de la ref i *)
           modifier_type_variable t i;
           acc @ [ i ]
         | _ -> failwith  "erreur interne" (* Cas normalement impossible *))

@@ -1,0 +1,5 @@
+test {
+    bool * unbooltressympa = (new bool);
+    (* unbooltressympa) = true;
+    bool * unboolpassympa = * unbooltressympa; 
+}
