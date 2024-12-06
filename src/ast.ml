@@ -22,6 +22,8 @@ module AstSyntax = struct
   type affectable =
     (* Accès à un identifiant représenté par son nom *)
     | Ident of string
+    (* Déférencement d'un affectable *)
+    | Deref of affectable
 
   (* Expressions de Rat *)
   type expression =
@@ -37,6 +39,12 @@ module AstSyntax = struct
     | Unaire of unaire * expression
     (* Opération binaire représentée par l'opérateur, l'opérande gauche et l'opérande droite *)
     | Binaire of binaire * expression * expression
+    (* Adresse d'un identifiant (avec le symbole &) *)
+    | Adresse of string
+    (* Allocation mémoire *)
+    | New of typ
+    (* NULL *)
+    | Null
 
   (* Instructions de Rat *)
   type bloc = instruction list

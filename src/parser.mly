@@ -35,6 +35,9 @@ open Ast.AstSyntax
 %token PLUS
 %token MULT
 %token INF
+%token NEW
+%token NULL
+%token AMPERSAND
 %token EOF
 
 (* Type de l'attribut synthétisé des non-terminaux *)
@@ -72,9 +75,10 @@ i :
 | RETURN exp=e PV                   {Retour (exp)}
 
 typ :
-| BOOL    {Bool}
-| INT     {Int}
-| RAT     {Rat}
+| BOOL          {Bool}
+| INT           {Int}
+| RAT           {Rat}
+| t=typ MULT    {Pointeur t}
 
 e : 
 | n=ID PO lp=separated_list(VIRG,e) PF   {AppelFonction (n,lp)}
@@ -90,6 +94,10 @@ e :
 | PO e1=e EQUAL e2=e PF                  {Binaire (Equ,e1,e2)}
 | PO e1=e INF e2=e PF                    {Binaire (Inf,e1,e2)}
 | PO exp=e PF                            {exp}
+| NULL                                   {Null}
+| PO NEW t=typ PF                        {New t}
+| AMPERSAND n=ID                         {Adresse n}
 
 a :
-| n=ID     {Ident n}
+| n=ID              {Ident n}
+| AMPERSAND a1=a    {Deref a1}

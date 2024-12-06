@@ -39,13 +39,12 @@ end
 (* Compilateurs intermédiaires *)
 
 (* Compilateur créant l'AST *)
-(*
-module CompilateurRat = Compilateur (PasseTdsNop) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop)
-*)
+(* module CompilateurRat =
+   Compilateur (PasseTdsNop) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop) *)
 
 (* + passe de résolution des identifiants *)
-(* module CompilateurRat =
-   Compilateur (PasseTdsRat) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop) *)
+module CompilateurRat =
+  Compilateur (PasseTdsRat) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop)
 
 (* + passe de typage *)
 (* module CompilateurRat =
@@ -56,9 +55,9 @@ module CompilateurRat = Compilateur (PasseTdsNop) (PasseTypeNop) (PassePlacement
    Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat) (PasseCodeNop) *)
 
 (* + passe de génération de code -> compilateur complet *)
-module CompilateurRat =
-  Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat)
-    (PasseCodeRatToTam)
+(* module CompilateurRat =
+   Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat)
+     (PasseCodeRatToTam) *)
 
 open Lexing
 
