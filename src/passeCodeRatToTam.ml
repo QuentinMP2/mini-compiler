@@ -7,6 +7,17 @@ open Code
 type t1 = Ast.AstPlacement.programme
 type t2 = string
 
+(* AstPlacement.affectable -> string *)
+let analyse_code_affectable (a : AstPlacement.affectable) en_ecriture =
+  match a with
+  | Ident info -> begin
+    match !info with
+    | InfoVar (_, t, depl, reg) ->
+      if en_ecriture then store (getTaille t) depl reg
+      else load (getTaille t) depl reg
+    | _ -> failwith "erreur interne"
+  end
+
 (* AstPlacement.expression -> string *)
 let rec analyse_code_expression (e : AstPlacement.expression) =
   match e with
@@ -17,11 +28,7 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
     | InfoFun (nom, _, _) -> call "SB" nom
     | _ -> failwith "erreur interne"
   end
-  | Ident info -> begin
-    match !info with
-    | InfoVar (_, t, depl, reg) -> load (getTaille t) depl reg
-    | _ -> failwith "erreur interne"
-  end
+  | Affectable a -> analyse_code_affectable a false
   | Booleen b -> loadl_int (Bool.to_int b)
   | Entier n -> loadl_int n
   | Unaire (op, exp) -> begin
@@ -53,12 +60,8 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) =
       ^ store (getTaille t) depl reg
     | _ -> failwith "erreur interne"
   end
-  | Affectation (info, e) -> begin
-    match !info with
-    | InfoVar (_, t, depl, reg) ->
-      analyse_code_expression e ^ store (getTaille t) depl reg
-    | _ -> failwith "erreur interne"
-  end
+  | Affectation (a, e) ->
+    analyse_code_expression e ^ analyse_code_affectable a true
   | AffichageInt e -> analyse_code_expression e ^ subr "IOut"
   | AffichageRat e -> analyse_code_expression e ^ call "SB" "ROut"
   | AffichageBool e -> analyse_code_expression e ^ subr "BOut"

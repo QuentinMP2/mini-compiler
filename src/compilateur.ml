@@ -44,8 +44,8 @@ module CompilateurRat = Compilateur (PasseTdsNop) (PasseTypeNop) (PassePlacement
 *)
 
 (* + passe de résolution des identifiants *)
-module CompilateurRat = 
-  Compilateur (PasseTdsRat) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop)
+(* module CompilateurRat =
+   Compilateur (PasseTdsRat) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop) *)
 
 (* + passe de typage *)
 (* module CompilateurRat =
@@ -56,9 +56,9 @@ module CompilateurRat =
    Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat) (PasseCodeNop) *)
 
 (* + passe de génération de code -> compilateur complet *)
-(* module CompilateurRat =
+module CompilateurRat =
   Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat)
-    (PasseCodeRatToTam) *)
+    (PasseCodeRatToTam)
 
 open Lexing
 

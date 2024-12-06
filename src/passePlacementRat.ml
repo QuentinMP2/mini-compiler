@@ -32,7 +32,7 @@ let rec analyse_placement_instruction i depl reg =
       (AstPlacement.Retour (e, getTaille t, tp), 0)
     | _ -> failwith "erreur interne"
   end
-  | AstType.Affectation (ia, e) -> (AstPlacement.Affectation (ia, e), 0)
+  | AstType.Affectation (a, e) -> (AstPlacement.Affectation (a, e), 0)
   | AstType.AffichageInt e -> (AstPlacement.AffichageInt e, 0)
   | AstType.AffichageRat e -> (AstPlacement.AffichageRat e, 0)
   | AstType.AffichageBool e -> (AstPlacement.AffichageBool e, 0)

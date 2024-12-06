@@ -45,9 +45,7 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
     | Inf -> "< "
 
   (* Conversion des affectables *)
-  let string_of_affectable a =
-    match a with
-    | Ident n -> n ^ " "
+  let string_of_affectable a = match a with Ident n -> n ^ " "
 
   (* Conversion des expressions *)
   let rec string_of_expression e =
@@ -75,7 +73,8 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
       "Declaration  : " ^ string_of_type t ^ " " ^ n ^ " = "
       ^ string_of_expression e ^ "\n"
     | Affectation (n, e) ->
-      "Affectation  : " ^ string_of_affectable n ^ " = " ^ string_of_expression e ^ "\n"
+      "Affectation  : " ^ string_of_affectable n ^ " = "
+      ^ string_of_expression e ^ "\n"
     | Constante (n, i) -> "Constante  : " ^ n ^ " = " ^ string_of_int i ^ "\n"
     | Affichage e -> "Affichage  : " ^ string_of_expression e ^ "\n"
     | Conditionnelle (c, t, e) ->

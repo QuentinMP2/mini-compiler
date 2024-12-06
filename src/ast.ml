@@ -19,9 +19,9 @@ module AstSyntax = struct
   type binaire = Fraction | Plus | Mult | Equ | Inf
 
   (* Affectables de Rat *)
-  type affectable = 
-  (* Accès à un identifiant représenté par son nom *)
-  | Ident of string
+  type affectable =
+    (* Accès à un identifiant représenté par son nom *)
+    | Ident of string
 
   (* Expressions de Rat *)
   type expression =
@@ -70,10 +70,8 @@ end
 (* AST après la phase d'analyse des identifiants *)
 (* ********************************************* *)
 module AstTds = struct
-
-  type affectable = 
-    | Ident of Tds.info_ast
-      (* le nom de l'identifiant est remplacé par ses informations *)
+  type affectable = Ident of Tds.info_ast
+  (* le nom de l'identifiant est remplacé par ses informations *)
 
   (* Expressions existantes dans notre langage *)
   (* ~ expression de l'AST syntaxique où les noms des identifiants ont été
@@ -130,11 +128,15 @@ module AstType = struct
     | EquBool
     | Inf
 
+  (* Affectables existants dans Rat *)
+  (* = affectable de AstTds *)
+  type affectable = Ident of Tds.info_ast
+
   (* Expressions existantes dans Rat *)
   (* = expression de AstTds *)
   type expression =
     | AppelFonction of Tds.info_ast * expression list
-    | Ident of Tds.info_ast
+    | Affectable of affectable
     | Booleen of bool
     | Entier of int
     | Unaire of unaire * expression
@@ -147,7 +149,7 @@ module AstType = struct
 
   and instruction =
     | Declaration of Tds.info_ast * expression
-    | Affectation of Tds.info_ast * expression
+    | Affectation of affectable * expression
     | AffichageInt of expression
     | AffichageRat of expression
     | AffichageBool of expression
@@ -167,6 +169,10 @@ end
 (* AST après la phase de placement *)
 (* ******************************* *)
 module AstPlacement = struct
+  (* Affectables existants dans notre langage *)
+  (* = affectables de AstType *)
+  type affectable = AstType.affectable
+
   (* Expressions existantes dans notre langage *)
   (* = expression de AstType  *)
   type expression = AstType.expression
@@ -176,7 +182,7 @@ module AstPlacement = struct
 
   and instruction =
     | Declaration of Tds.info_ast * expression
-    | Affectation of Tds.info_ast * expression
+    | Affectation of affectable * expression
     | AffichageInt of expression
     | AffichageRat of expression
     | AffichageBool of expression
