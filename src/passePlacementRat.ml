@@ -1,4 +1,4 @@
-open Tds
+(* open Tds
 open Ast
 open Type
 
@@ -92,4 +92,4 @@ let analyse_placement_fonction (AstType.Fonction (info, lp, li)) =
 let analyser (AstType.Programme (fonctions, prog)) =
   let nf = List.map analyse_placement_fonction fonctions in
   let nb = analyse_placement_bloc prog 0 "SB" in
-  AstPlacement.Programme (nf, nb)
+  AstPlacement.Programme (nf, nb) *)

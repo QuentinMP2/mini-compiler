@@ -45,7 +45,10 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
     | Inf -> "< "
 
   (* Conversion des affectables *)
-  let string_of_affectable a = match a with Ident n -> n ^ " "
+  let rec string_of_affectable a = 
+    match a with 
+    | Ident n -> n ^ " "
+    | Deref aff -> "*" ^ string_of_affectable aff
 
   (* Conversion des expressions *)
   let rec string_of_expression e =
@@ -58,13 +61,18 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
     | Booleen b -> if b then "true " else "false "
     | Entier i -> string_of_int i ^ " "
     | Unaire (op, e1) -> string_of_unaire op ^ string_of_expression e1 ^ " "
-    | Binaire (b, e1, e2) -> (
+    | Binaire (b, e1, e2) -> begin
       match b with
       | Fraction ->
         "[" ^ string_of_expression e1 ^ "/" ^ string_of_expression e2 ^ "] "
       | _ ->
         string_of_expression e1 ^ string_of_binaire b ^ string_of_expression e2
-        ^ " ")
+        ^ " "
+      end
+    | Adresse n -> "&" ^ n
+    | New t -> "new " ^ string_of_type t
+    | Null -> "null"
+
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =

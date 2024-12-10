@@ -1,4 +1,4 @@
-open Tds
+(* open Tds
 open Exceptions
 open Ast
 open Type
@@ -192,4 +192,4 @@ let analyse_type_fonctions lf = List.map analyse_type_fonction lf
 let analyser (AstTds.Programme (fonctions, prog)) =
   let nfs = analyse_type_fonctions fonctions in
   let np = analyse_type_bloc prog in
-  AstType.Programme (nfs, np)
+  AstType.Programme (nfs, np) *)

@@ -1,3 +1,4 @@
+
 (* Module de la passe de gestion des identifiants *)
 (* doit être conforme à l'interface Passe *)
 open Tds
@@ -13,7 +14,7 @@ type t2 = Ast.AstTds.programme
 (* Vérifie la bonne utilisation des affectables et tranforme l'affectable
    en un affectable de type AstTds.affectable *)
 (* Erreur si mauvaise utilisation des identifiants *)
-let analyse_tds_affectable tds a en_ecriture =
+let rec analyse_tds_affectable tds a en_ecriture =
   match a with
   | AstSyntax.Ident n -> begin
     match chercherGlobalement tds n with
@@ -27,6 +28,9 @@ let analyse_tds_affectable tds a en_ecriture =
       | _ -> raise (MauvaiseUtilisationIdentifiant n)
     end
   end
+  | AstSyntax.Deref a -> 
+    let na = analyse_tds_affectable tds a en_ecriture in
+    AstTds.Deref na
 
 (* analyse_tds_expression : tds -> AstSyntax.expression -> AstTds.expression *)
 (* Paramètre tds : la table des symboles courante *)
@@ -53,7 +57,16 @@ let rec analyse_tds_expression tds e =
       | InfoConst (_, value) -> AstTds.Entier value
       | _ -> AstTds.Affectable na
     end
-    (* | _ -> AstTds.Affectable na *)
+    | _ -> AstTds.Affectable na
+  end
+  | AstSyntax.Adresse id -> begin
+    match chercherGlobalement tds id with
+    | None -> raise (IdentifiantNonDeclare id)
+    | Some info -> begin
+      match !info with
+      | InfoVar _ -> AstTds.Adresse info
+      | _ -> raise (MauvaiseUtilisationIdentifiant id)
+    end
   end
   | AstSyntax.Binaire (b, e1, e2) ->
     AstTds.Binaire
@@ -62,6 +75,8 @@ let rec analyse_tds_expression tds e =
     AstTds.Unaire (op, analyse_tds_expression tds e1)
   | AstSyntax.Booleen b -> AstTds.Booleen b
   | AstSyntax.Entier i -> AstTds.Entier i
+  | AstSyntax.New t -> AstTds.New t
+  | AstSyntax.Null -> AstTds.Null
 
 (* analyse_tds_instruction : tds -> info_ast option -> AstSyntax.instruction -> AstTds.instruction *)
 (* Paramètre tds : la table des symboles courante *)

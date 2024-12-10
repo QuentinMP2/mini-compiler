@@ -100,4 +100,4 @@ e :
 
 a :
 | n=ID              {Ident n}
-| AMPERSAND a1=a    {Deref a1}
+| MULT a1=a         {Deref a1}

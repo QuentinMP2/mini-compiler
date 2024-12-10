@@ -78,8 +78,10 @@ end
 (* AST après la phase d'analyse des identifiants *)
 (* ********************************************* *)
 module AstTds = struct
-  type affectable = Ident of Tds.info_ast
-  (* le nom de l'identifiant est remplacé par ses informations *)
+  type affectable = 
+    | Ident of Tds.info_ast
+    (* le nom de l'identifiant est remplacé par ses informations *)
+    | Deref of affectable
 
   (* Expressions existantes dans notre langage *)
   (* ~ expression de l'AST syntaxique où les noms des identifiants ont été
@@ -91,6 +93,9 @@ module AstTds = struct
     | Entier of int
     | Unaire of AstSyntax.unaire * expression
     | Binaire of AstSyntax.binaire * expression * expression
+    | Adresse of Tds.info_ast
+    | New of typ 
+    | Null
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été
