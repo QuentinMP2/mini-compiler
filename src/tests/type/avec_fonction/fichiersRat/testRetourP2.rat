@@ -1,12 +1,13 @@
-bool* lerat(int suuuuu) {
-    bool res = false;
+bool** lerat(int suuuuu) {
+    bool* res = (new bool);
+    (*res) = false;
     if (suuuuu = 3) {
-        res = true;
-    }
+        (*res) = true;
+    } else {}
 
     return &res;
 }
 
 test {
-    bool** rvf = lerat(3);
+    bool*** rvf = lerat(3);
 }

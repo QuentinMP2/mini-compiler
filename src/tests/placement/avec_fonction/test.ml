@@ -114,3 +114,15 @@ let%test "test12_f_r" =
 
 let%test "test12_f_i" =
   test (pathFichiersRat ^ "test12.rat") "f" ("i", 1) (-1, "LB")
+
+let%test "testP1_pr" = 
+  test (pathFichiersRat ^ "testP1.rat") "main" ("pr", 1) (0, "SB")
+
+let%test "testP1_res" = 
+  test (pathFichiersRat ^ "testP1.rat") "main" ("res", 1) (1, "SB")
+
+let%test "testP1_f_x" = 
+  test (pathFichiersRat ^ "testP1.rat") "f" ("x", 1) (-1, "LB")
+
+let%test "testP1_f_a" = 
+  test (pathFichiersRat ^ "testP1.rat") "f" ("a", 1) (3, "LB")

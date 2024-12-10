@@ -126,7 +126,7 @@ let%test_unit "testRetourP2.rat" =
   try
     let _ = compiler (pathFichiersRat ^ "testRetourP2.rat") in
     raise ErreurNonDetectee
-  with TypeInattendu (Pointeur Bool, Pointeur (Pointeur Bool)) -> ()
+  with TypeInattendu (Pointeur (Pointeur Bool), Pointeur (Pointeur (Pointeur Bool))) -> ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix

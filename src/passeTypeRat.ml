@@ -180,7 +180,7 @@ and analyse_type_bloc li = List.map analyse_type_instruction li
 (* Place les types dans les info_ast de l'AST et associe les bonnes
    opérations en fonction des types dans les focntions *)
 (* Erreur si mauvaise utilisation des types *)
-let analyse_type_fonction (AstTds.Fonction (_, info, lp, li)) =
+let analyse_type_fonction (AstTds.Fonction (tr, info, lp, li)) =
   let mli = List.map analyse_type_instruction li in
   let listI : info ref list =
     List.fold_left
@@ -195,7 +195,12 @@ let analyse_type_fonction (AstTds.Fonction (_, info, lp, li)) =
         | _ -> failwith "erreur interne : type_fonction" (* Cas normalement impossible *))
       [] lp
   in
-  AstType.Fonction (info, listI, mli)
+  match !info with
+  | InfoFun(_, _, listT) -> begin
+    modifier_type_fonction tr listT info;
+    AstType.Fonction (info, listI, mli)
+  end
+  | _ -> failwith "erreur interne : type_fonction - 2"
 
 let analyse_type_fonctions lf = List.map analyse_type_fonction lf
 
