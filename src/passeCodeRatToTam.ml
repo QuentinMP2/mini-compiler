@@ -1,4 +1,4 @@
-(* open Tds
+open Tds
 open Ast
 open Type
 open Tam
@@ -15,7 +15,7 @@ let analyse_code_affectable (a : AstPlacement.affectable) en_ecriture =
     | InfoVar (_, t, depl, reg) ->
       if en_ecriture then store (getTaille t) depl reg
       else load (getTaille t) depl reg
-    | _ -> failwith "erreur interne"
+    | _ -> failwith "erreur interne : code_affectable"
   end
 
 (* AstPlacement.expression -> string *)
@@ -26,7 +26,7 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
     ^
     match !i with
     | InfoFun (nom, _, _) -> call "SB" nom
-    | _ -> failwith "erreur interne"
+    | _ -> failwith "erreur interne : code_expression"
   end
   | Affectable a -> analyse_code_affectable a false
   | Booleen b -> loadl_int (Bool.to_int b)
@@ -58,7 +58,7 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) =
       push (getTaille t)
       ^ analyse_code_expression e
       ^ store (getTaille t) depl reg
-    | _ -> failwith "erreur interne"
+    | _ -> failwith "erreur interne : code_instruction"
   end
   | Affectation (a, e) ->
     analyse_code_expression e ^ analyse_code_affectable a true
@@ -89,7 +89,7 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
   let labelF =
     match !info with
     | InfoFun (nom, _, _) -> nom
-    | _ -> failwith "erreur interne"
+    | _ -> failwith "erreur interne : code_fonction"
   in
   let nli = analyse_code_bloc (li, taille) in
   label labelF ^ nli ^ halt
@@ -98,4 +98,4 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
 let analyser (AstPlacement.Programme (fonctions, prog)) =
   getEntete ()
   ^ List.fold_left (fun acc x -> acc ^ analyse_code_fonction x) "" fonctions
-  ^ "main\n" ^ analyse_code_bloc prog ^ halt *)
+  ^ "main\n" ^ analyse_code_bloc prog ^ halt

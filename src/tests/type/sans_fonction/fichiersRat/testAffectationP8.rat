@@ -1,0 +1,5 @@
+test {
+    int b = 4;
+    int* pb = &b;
+    rat* r = pb;
+}

@@ -110,6 +110,60 @@ let%test_unit "testAffectation9" =
     raise ErreurNonDetectee
   with TypeInattendu (Int, Bool) -> ()
 
+let%test_unit "testAffectationP1" =
+  let _ = compiler (pathFichiersRat ^ "testAffectationP1.rat") in
+  ()
+
+let%test_unit "testAffectationP2" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP2.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Bool, Pointeur Int) -> ()
+
+let%test_unit "testAffectationP3" =
+  let _ = compiler (pathFichiersRat ^ "testAffectationP3.rat") in
+  ()
+
+let%test_unit "testAffectationP4" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP4.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Int, Pointeur Int) -> ()
+
+let%test_unit "testAffectationP5" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP5.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Bool, Pointeur Rat) -> ()
+
+let%test_unit "testAffectationP6" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP6.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Rat, Pointeur Int) -> ()
+
+  let%test_unit "testAffectationP7" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP7.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Rat, Pointeur Bool) -> ()
+
+let%test_unit "testAffectationP8" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP8.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Int, Pointeur Rat) -> ()
+
+let%test_unit "testAffectationP9" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testAffectationP9.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Int, Pointeur Bool) -> ()
+
+let%test_unit "testAffectationP10" =
+  let _ = compiler (pathFichiersRat ^ "testAffectationP10.rat") in
+  ()
+
 let%test_unit "testConditionnelle1" =
   let _ = compiler (pathFichiersRat ^ "testConditionnelle1.rat") in
   ()
@@ -369,6 +423,28 @@ let%test_unit "testOperation11" =
 let%test_unit "testOperation12" =
   let _ = compiler (pathFichiersRat ^ "testOperation12.rat") in
   ()
+
+let%test_unit "testUtilisationP1" =
+  let _ = compiler (pathFichiersRat ^ "testUtilisationP1.rat") in
+  ()
+
+let%test_unit "testUtilisationP2" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testUtilisationP2.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur (Pointeur Bool), Bool) -> ()
+
+let%test_unit "testUtilisationP3" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testUtilisationP3.rat") in
+    raise ErreurNonDetectee
+  with DereferencementIllegal -> ()
+
+let%test_unit "testUtilisationP4" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testUtilisationP4.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Int, Bool) -> ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix

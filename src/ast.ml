@@ -143,7 +143,9 @@ module AstType = struct
 
   (* Affectables existants dans Rat *)
   (* = affectable de AstTds *)
-  type affectable = Ident of Tds.info_ast
+  type affectable = 
+    | Ident of Tds.info_ast
+    | Deref of affectable
 
   (* Expressions existantes dans Rat *)
   (* = expression de AstTds *)
@@ -154,6 +156,9 @@ module AstType = struct
     | Entier of int
     | Unaire of unaire * expression
     | Binaire of binaire * expression * expression
+    | Adresse of Tds.info_ast
+    | New of typ 
+    | Null
 
   (* instructions existantes Rat *)
   (* = instruction de AstTds + informations associées aux identificateurs, mises à jour *)

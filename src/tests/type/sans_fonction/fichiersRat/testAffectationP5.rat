@@ -1,0 +1,5 @@
+test {
+    bool b = false;
+    bool* pb = &b;
+    rat* r = pb;
+}

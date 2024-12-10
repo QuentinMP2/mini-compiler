@@ -1,0 +1,12 @@
+bool* lerat(int suuuuu) {
+    bool res = false;
+    if (suuuuu = 3) {
+        res = true;
+    }
+
+    return &res;
+}
+
+test {
+    bool** rvf = lerat(3);
+}

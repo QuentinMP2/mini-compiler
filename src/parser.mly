@@ -99,5 +99,5 @@ e :
 | AMPERSAND n=ID                         {Adresse n}
 
 a :
-| n=ID              {Ident n}
-| MULT a1=a         {Deref a1}
+| n=ID                   {Ident n}
+| PO MULT a1=a PF        {Deref a1}

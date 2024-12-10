@@ -1,8 +1,11 @@
 bool suis_je_content (int a) {
     bool pas-content = false;
+    int* b = &a;
     return pas-content;
 }
 
 test {
-    bool *pointeur_est_content = &suis_je_content;
+    int a = 4;
+    bool b = suis_je_content(a);
+
 }

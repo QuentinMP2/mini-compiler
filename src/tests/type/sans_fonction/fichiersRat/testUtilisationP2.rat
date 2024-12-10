@@ -1,0 +1,4 @@
+test {
+    bool*** pb = (new bool**);
+    bool b = (*pb);
+}

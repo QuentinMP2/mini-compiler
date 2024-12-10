@@ -1,0 +1,16 @@
+bool* idiotduvillage(bool* b) {
+    bool b = true;
+    bool * res = &b;
+    if ((*b)) {
+        return res;
+    } else {
+        (*res) = false;
+        (*b) = true;
+        return res;
+    }
+}
+
+main {
+    bool b = false;
+    bool *c = idiotduvillage(&b); 
+}

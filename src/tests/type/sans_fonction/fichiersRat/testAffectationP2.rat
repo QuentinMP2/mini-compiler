@@ -1,0 +1,4 @@
+test {
+    bool b = true;
+    int* pb = &b;
+}

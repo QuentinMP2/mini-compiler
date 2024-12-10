@@ -1,4 +1,4 @@
-(* open Tds
+open Tds
 open Ast
 open Type
 
@@ -19,7 +19,7 @@ let rec analyse_placement_instruction i depl reg =
       (* ajouter depl[reg] dans l'info i *)
       modifier_adresse_variable depl reg info;
       (AstPlacement.Declaration (info, e), getTaille t)
-    | _ -> failwith "erreur interne"
+    | _ -> failwith "erreur interne : placement_instruction - declaration"
   end
   | AstType.Conditionnelle (c, t, e) ->
     (* On analyse les blocs t et e *)
@@ -36,7 +36,7 @@ let rec analyse_placement_instruction i depl reg =
       (* On récupere la taille totale des paramètres de la fonction lié à l'instuction retour *)
       let tp = List.fold_left (fun acc x -> getTaille x + acc) 0 ltp in
       (AstPlacement.Retour (e, getTaille t, tp), 0)
-    | _ -> failwith "erreur interne"
+    | _ -> failwith "erreur interne : placement_instruction - retour"
   end
   | AstType.Affectation (a, e) -> (AstPlacement.Affectation (a, e), 0)
   | AstType.AffichageInt e -> (AstPlacement.AffichageInt e, 0)
@@ -80,7 +80,7 @@ let analyse_placement_fonction (AstType.Fonction (info, lp, li)) =
         (* On modifie son adresse par effet de bord *)
         modifier_adresse_variable (-(taillei + tailleq)) "LB" i;
         tailleq + taillei
-      | _ -> failwith "erreur interne")
+      | _ -> failwith "erreur interne : placement_param")
   in
   let _ = analyse_placement_param lp in
   let nb = analyse_placement_bloc li 3 "LB" in
@@ -92,4 +92,4 @@ let analyse_placement_fonction (AstType.Fonction (info, lp, li)) =
 let analyser (AstType.Programme (fonctions, prog)) =
   let nf = List.map analyse_placement_fonction fonctions in
   let nb = analyse_placement_bloc prog 0 "SB" in
-  AstPlacement.Programme (nf, nb) *)
+  AstPlacement.Programme (nf, nb)

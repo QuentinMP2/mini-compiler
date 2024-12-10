@@ -118,6 +118,16 @@ let%test_unit "code_factrec" =
   let _ = compiler (pathFichiersRat ^ "factrec.rat") in
   ()
 
+let%test_unit "testRetourP1.rat" =
+  let _ = compiler (pathFichiersRat ^ "testRetourP1.rat") in
+  ()
+
+let%test_unit "testRetourP2.rat" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testRetourP2.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Pointeur Bool, Pointeur (Pointeur Bool)) -> ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

@@ -43,6 +43,10 @@ let%test_unit "testAffectationP2" =
   let _ = compiler (pathFichiersRat ^ "testAffectationP2.rat") in
   ()
 
+let%test_unit "testAffectationP3" =
+  let _ = compiler (pathFichiersRat ^ "testAffectationP3.rat") in
+  ()
+
 let%test_unit "testUtilisation1" =
   let _ = compiler (pathFichiersRat ^ "testUtilisation1.rat") in
   ()

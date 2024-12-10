@@ -1,0 +1,7 @@
+test {
+    int** ppa = (new int*);
+
+    bool b = true;
+    bool* pb = &b;
+    bool** ppb = &pb;
+}

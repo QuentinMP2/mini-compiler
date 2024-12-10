@@ -1,0 +1,5 @@
+test {
+    rat r = [10/10];
+    rat* pr = &r;
+    int* i = pr;
+}

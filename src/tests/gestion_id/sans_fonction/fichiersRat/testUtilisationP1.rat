@@ -3,6 +3,6 @@ test{
     if (z < 0) {
         bool y = false;
     } else {
-        int* x = *y;
+        int* x = (*y);
     }
 }
