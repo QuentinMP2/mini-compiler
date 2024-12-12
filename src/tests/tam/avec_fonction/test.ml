@@ -63,3 +63,7 @@ let%expect_test "testfuns" =
 let%expect_test "factrec" =
   runtam (pathFichiersRat ^ "factrec.rat");
   [%expect {| 120 |}]
+
+let%expect_test "testfunP1" =
+  runtam (pathFichiersRat ^ "testfunP1.rat");
+  [%expect {| 75 |}]

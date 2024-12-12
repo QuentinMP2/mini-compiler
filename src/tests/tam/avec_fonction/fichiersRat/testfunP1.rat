@@ -1,0 +1,11 @@
+int f (int a, int* b) {
+  (*b) = 5;
+  return a;
+}
+
+test {
+  int* c = (new int);
+  (*c) = 2;
+  print f ((3+4),c);
+  print (*c);
+}

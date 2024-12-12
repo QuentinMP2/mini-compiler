@@ -154,3 +154,24 @@ let%test "testP1_z" =
 
 let%test "testP1_y" =
   test (pathFichiersRat ^ "testP1.rat") "main" ("y", 1) (2, "SB")
+
+let%test "testP2_x" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("x", 1) (0, "SB")
+
+let%test "testP2_y_1" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("y", 1) (1, "SB")
+
+let%test "testP2_z_1" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("z", 1) (3, "SB")
+
+let%test "testP2_y_2" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("y", 2) (4, "SB")
+
+let%test "testP2_z_2" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("z", 2) (5, "SB")
+
+let%test "testP2_a_1" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("a", 1) (6, "SB")
+
+let%test "testP2_a_2" =
+  test (pathFichiersRat ^ "testP2.rat") "main" ("a", 2) (4, "SB")

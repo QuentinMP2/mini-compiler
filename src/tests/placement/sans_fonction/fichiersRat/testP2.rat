@@ -1,0 +1,14 @@
+main {
+    bool x = true;
+    rat y = [5/2];
+    rat* z = (new rat);
+    
+    while x {
+        x = false;
+        bool y = true;
+        bool* z = (new bool);
+        int a = 3;
+    }
+
+    int a = 5;
+}
