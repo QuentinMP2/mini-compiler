@@ -69,16 +69,20 @@ module AstSyntax = struct
   (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction *)
   type fonction = Fonction of typ * string * (typ * string) list * bloc
 
+  (* Variables Globales *)
+  (* Déclaration de variable représentée par son type, son nom et l'expression d'initialisation *)
+  type variableG = DeclarationG of typ * string * expression
+
   (* Structure d'un programme Rat *)
   (* liste de fonction - programme principal *)
-  type programme = Programme of fonction list * bloc
+  type programme = Programme of variableG list * fonction list * bloc
 end
 
 (* ********************************************* *)
 (* AST après la phase d'analyse des identifiants *)
 (* ********************************************* *)
 module AstTds = struct
-  type affectable = 
+  type affectable =
     | Ident of Tds.info_ast
     (* le nom de l'identifiant est remplacé par ses informations *)
     | Deref of affectable
@@ -94,7 +98,7 @@ module AstTds = struct
     | Unaire of AstSyntax.unaire * expression
     | Binaire of AstSyntax.binaire * expression * expression
     | Adresse of Tds.info_ast
-    | New of typ 
+    | New of typ
     | Null
 
   (* instructions existantes dans notre langage *)
@@ -120,7 +124,8 @@ module AstTds = struct
     | Fonction of typ * Tds.info_ast * (typ * Tds.info_ast) list * bloc
 
   (* Structure d'un programme dans notre langage *)
-  type programme = Programme of fonction list * bloc
+  (* On transforme le type des variables globales en variables classique car elles ont le même traitement *)
+  type programme = Programme of bloc * fonction list * bloc
 end
 
 (* ******************************* *)
@@ -143,9 +148,7 @@ module AstType = struct
 
   (* Affectables existants dans Rat *)
   (* = affectable de AstTds *)
-  type affectable = 
-    | Ident of Tds.info_ast
-    | Deref of affectable
+  type affectable = Ident of Tds.info_ast | Deref of affectable
 
   (* Expressions existantes dans Rat *)
   (* = expression de AstTds *)
@@ -157,7 +160,7 @@ module AstType = struct
     | Unaire of unaire * expression
     | Binaire of binaire * expression * expression
     | Adresse of Tds.info_ast
-    | New of typ 
+    | New of typ
     | Null
 
   (* instructions existantes Rat *)
@@ -180,7 +183,7 @@ module AstType = struct
   type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
 
   (* Structure d'un programme dans notre langage *)
-  type programme = Programme of fonction list * bloc
+  type programme = Programme of bloc * fonction list * bloc
 end
 
 (* ******************************* *)
@@ -215,5 +218,5 @@ module AstPlacement = struct
   type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
 
   (* Structure d'un programme dans notre langage *)
-  type programme = Programme of fonction list * bloc
+  type programme = Programme of bloc * fonction list * bloc
 end

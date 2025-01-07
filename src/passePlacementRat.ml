@@ -89,7 +89,8 @@ let analyse_placement_fonction (AstType.Fonction (info, lp, li)) =
 (* analyser : AstType.programme -> AstPlacement.programme *)
 (* Paramètre : le programme à analyser *)
 (* Ajoute le placement mémoire dans les infos de l'AST dans le programme *)
-let analyser (AstType.Programme (fonctions, prog)) =
+let analyser (AstType.Programme (variablesG, fonctions, prog)) =
+  let lvg, depl = analyse_placement_bloc variablesG 0 "SB" in
   let nf = List.map analyse_placement_fonction fonctions in
-  let nb = analyse_placement_bloc prog 0 "SB" in
-  AstPlacement.Programme (nf, nb)
+  let nb = analyse_placement_bloc prog depl "SB" in
+  AstPlacement.Programme ((lvg, depl), nf, nb)

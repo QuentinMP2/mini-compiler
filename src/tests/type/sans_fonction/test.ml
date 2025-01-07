@@ -142,7 +142,7 @@ let%test_unit "testAffectationP6" =
     raise ErreurNonDetectee
   with TypeInattendu (Pointeur Rat, Pointeur Int) -> ()
 
-  let%test_unit "testAffectationP7" =
+let%test_unit "testAffectationP7" =
   try
     let _ = compiler (pathFichiersRat ^ "testAffectationP7.rat") in
     raise ErreurNonDetectee
@@ -445,6 +445,28 @@ let%test_unit "testUtilisationP4" =
     let _ = compiler (pathFichiersRat ^ "testUtilisationP4.rat") in
     raise ErreurNonDetectee
   with TypeInattendu (Int, Bool) -> ()
+
+let%test_unit "testVG1" =
+  let _ = compiler (pathFichiersRat ^ "testVG1.rat") in
+  ()
+
+let%test_unit "testVG2" =
+  let _ = compiler (pathFichiersRat ^ "testVG2.rat") in
+  ()
+
+let%test_unit "testVG3" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testVG3.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Bool, Int) -> ()
+
+let%test_unit "testVG4" =
+  let _ = compiler (pathFichiersRat ^ "testVG4.rat") in
+  ()
+
+let%test_unit "testVG5" =
+  let _ = compiler (pathFichiersRat ^ "testVG5.rat") in
+  ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix

@@ -1,0 +1,9 @@
+static int x = 1;
+static int a = 1;
+static rat b = [5/2];
+static int c = 1;
+
+main {
+    int y = x;
+    print x;
+}

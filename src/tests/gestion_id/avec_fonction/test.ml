@@ -197,6 +197,14 @@ let%test_unit "testRetourFonction" =
     raise ErreurNonDetectee
   with RetourDansMain -> ()
 
+let%test_unit "testVG1" =
+  let _ = compiler (pathFichiersRat ^ "testVG1.rat") in
+  ()
+
+let%test_unit "testVG2" =
+  let _ = compiler (pathFichiersRat ^ "testVG2.rat") in
+  ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

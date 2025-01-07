@@ -16,11 +16,13 @@ let rec analyse_type_affectable a =
   | AstTds.Ident info -> begin
     match !info with
     | InfoVar (_, t, _, _) -> (AstType.Ident info, t)
-    | _ -> failwith "erreur interne : type_affectable" (* Cas normalement impossible *)
+    | _ ->
+      failwith
+        "erreur interne : type_affectable" (* Cas normalement impossible *)
   end
-  | AstTds.Deref a -> begin 
+  | AstTds.Deref a -> begin
     let na, ta = analyse_type_affectable a in
-    match ta with 
+    match ta with
     | Pointeur t -> (AstType.Deref na, t)
     | _ -> raise DereferencementIllegal
   end
@@ -51,7 +53,8 @@ let rec analyse_type_expression e =
       if est_compatible_list tp argst then
         (AstType.AppelFonction (info, nle), tr)
       else raise (TypesParametresInattendus (tp, argst))
-    | _ -> failwith "erreur interne : type_expression - appel fonction" (* Cas normalement impossible *)
+    | _ -> failwith "erreur interne : type_expression - appel fonction"
+    (* Cas normalement impossible *)
   end
   | AstTds.Affectable a ->
     (* On analyse l'affectable *)
@@ -87,11 +90,10 @@ let rec analyse_type_expression e =
   | AstTds.Entier i -> (AstType.Entier i, Int)
   | Adresse info -> begin
     match !info with
-    | InfoVar(_, t, _, _) ->
-      (AstType.Adresse(info), Pointeur(t))
+    | InfoVar (_, t, _, _) -> (AstType.Adresse info, Pointeur t)
     | _ -> failwith "erreur interne : type_expression - adresse"
   end
-  | New t -> (AstType.New(t), Pointeur(t))
+  | New t -> (AstType.New t, Pointeur t)
   | Null -> (AstType.Null, Pointeur Undefined)
 
 (* analyse_type_instruction : AstTds.instruction -> AstType *)
@@ -113,7 +115,8 @@ let rec analyse_type_instruction i =
       | InfoVar _ ->
         modifier_type_variable nt info;
         AstType.Declaration (info, ne)
-      | _ -> failwith "erreur interne : type_instruction - declaration" (* Cas normalement impossible *)
+      | _ -> failwith "erreur interne : type_instruction - declaration"
+    (* Cas normalement impossible *)
   end
   | AstTds.Affectation (a, e) -> begin
     (* analyse de l'expression *)
@@ -134,7 +137,10 @@ let rec analyse_type_instruction i =
     | Int -> AstType.AffichageInt ne
     | Bool -> AstType.AffichageBool ne
     | Rat -> AstType.AffichageRat ne
-    | _ -> failwith ("erreur interne : type_instruction - Affichage " ^ (string_of_type nt)) (* Cas normalement impossible *)
+    | _ ->
+      failwith
+        ("erreur interne : type_instruction - Affichage " ^ string_of_type nt)
+    (* Cas normalement impossible *)
   end
   | AstTds.Conditionnelle (c, t, e) ->
     (* On analyse l'expression *)
@@ -163,7 +169,8 @@ let rec analyse_type_instruction i =
         (* Le type de l'expression de retour est incompatible avec le type de retour de la fonction *)
         raise (TypeInattendu (nt, typret))
       else AstType.Retour (ne, ia)
-    | _ -> failwith "erreur interne : type_instruction - retour" (* Cas normalement impossible *)
+    | _ -> failwith "erreur interne : type_instruction - retour"
+    (* Cas normalement impossible *)
   end
   | AstTds.Empty -> AstType.Empty
 
@@ -191,11 +198,13 @@ let analyse_type_fonction (AstTds.Fonction (tr, info, lp, li)) =
           (* On modifie le type de la ref i *)
           modifier_type_variable t i;
           acc @ [ i ]
-        | _ -> failwith "erreur interne : type_fonction" (* Cas normalement impossible *))
+        | _ ->
+          failwith
+            "erreur interne : type_fonction" (* Cas normalement impossible *))
       [] lp
   in
   match !info with
-  | InfoFun(_, _, listT) -> begin
+  | InfoFun (_, _, listT) -> begin
     modifier_type_fonction tr listT info;
     AstType.Fonction (info, listI, mli)
   end
@@ -208,7 +217,8 @@ let analyse_type_fonctions lf = List.map analyse_type_fonction lf
 (* Place les types dans les info_ast de l'AST et associe les bonnes
    opérations en fonction des types dans le programme *)
 (* Erreur si mauvaise utilisation des types *)
-let analyser (AstTds.Programme (fonctions, prog)) =
+let analyser (AstTds.Programme (variablesG, fonctions, prog)) =
+  let lvg = analyse_type_bloc variablesG in
   let nfs = analyse_type_fonctions fonctions in
   let np = analyse_type_bloc prog in
-  AstType.Programme (nfs, np)
+  AstType.Programme (lvg, nfs, np)

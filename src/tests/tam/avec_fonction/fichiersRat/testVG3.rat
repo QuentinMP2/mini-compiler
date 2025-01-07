@@ -1,0 +1,13 @@
+static int x = 3;
+
+int calcul (int x) {
+    print x;
+    x = (x + x);
+    return x;
+}
+
+main {
+    print x;
+    x = calcul(x);
+    print x;
+}

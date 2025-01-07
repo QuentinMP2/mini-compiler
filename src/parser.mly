@@ -37,11 +37,13 @@ open Ast.AstSyntax
 %token INF
 %token NEW
 %token NULL
+%token STATIC
 %token AMPERSAND
 %token EOF
 
 (* Type de l'attribut synthétisé des non-terminaux *)
 %type <programme> prog
+%type <variableG> var
 %type <instruction list> bloc
 %type <fonction> fonc
 %type <instruction> i
@@ -57,7 +59,9 @@ open Ast.AstSyntax
 
 main : lfi=prog EOF     {lfi}
 
-prog : lf=fonc* ID li=bloc  {Programme (lf,li)}
+prog : lv=var* lf=fonc* ID li=bloc  {Programme (lv,lf,li)}
+
+var : STATIC t=typ n=ID EQUAL e1=e PV          {DeclarationG (t,n,e1)}
 
 fonc : t=typ n=ID PO lp=separated_list(VIRG,param) PF li=bloc {Fonction(t,n,lp,li)}
 

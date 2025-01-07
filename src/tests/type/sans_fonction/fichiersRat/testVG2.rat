@@ -1,0 +1,7 @@
+static int x = 5;
+static int y = 4;
+
+main {
+    int a = (x + y);
+    print a;
+}

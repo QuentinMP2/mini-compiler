@@ -1,0 +1,6 @@
+static bool b = false;
+static int x = b;
+
+test {
+    int y = x;
+}

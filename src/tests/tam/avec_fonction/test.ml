@@ -71,3 +71,19 @@ let%expect_test "testfunP1" =
 let%expect_test "testfunP2" =
   runtam (pathFichiersRat ^ "testfunP2.rat");
   [%expect {| 69 |}]
+
+let%expect_test "testVG1" =
+  runtam (pathFichiersRat ^ "testVG1.rat");
+  [%expect {| false10 |}]
+
+let%expect_test "testVG2" =
+  runtam (pathFichiersRat ^ "testVG2.rat");
+  [%expect {| 48 |}]
+
+let%expect_test "testVG3" =
+  runtam (pathFichiersRat ^ "testVG3.rat");
+  [%expect {| 336 |}]
+
+let%expect_test "testVG4" =
+  runtam (pathFichiersRat ^ "testVG4.rat");
+  [%expect {| 44 |}]

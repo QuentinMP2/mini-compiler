@@ -1,0 +1,9 @@
+static int x = 4;
+static int y = x;
+
+main {
+    int y = y;
+    int x = 6;
+    x = (x + y);
+    print x;
+}

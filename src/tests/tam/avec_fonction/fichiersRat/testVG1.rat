@@ -1,0 +1,13 @@
+static int x = 4;
+
+bool f () {
+    x = (x + 1);
+    bool x = false;
+    return x;
+}
+
+main {
+    print f ();
+    int a = (x + 5);
+    print a;
+}

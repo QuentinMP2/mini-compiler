@@ -1,4 +1,3 @@
-
 (* Module de la passe de gestion des identifiants *)
 (* doit être conforme à l'interface Passe *)
 open Tds
@@ -28,7 +27,7 @@ let rec analyse_tds_affectable tds a en_ecriture =
       | _ -> raise (MauvaiseUtilisationIdentifiant n)
     end
   end
-  | AstSyntax.Deref a -> 
+  | AstSyntax.Deref a ->
     let na = analyse_tds_affectable tds a en_ecriture in
     AstTds.Deref na
 
@@ -185,7 +184,7 @@ and analyse_tds_bloc tds oia li =
   nli
 
 (* analyse_tds_fonction : tds -> AstSyntax.fonction -> AstTds.fonction *)
-(* Paramètre tds : la table des symboles courante *)
+(* Paramètre maintds : la table des symboles courante *)
 (* Paramètre : la fonction à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme la fonction
    en une fonction de type AstTds.fonction *)
@@ -222,14 +221,43 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction (t, n, lp, li)) =
     let ast_inst = analyse_tds_bloc tds_fonction (Some ia) li in
     AstTds.Fonction (t, ia, liste_args, ast_inst)
 
+(* analyse_tds_variableG : tds -> AstSyntax.variableG -> AstTds.variableG *)
+(* Paramètre maintds : la table des symboles courante *)
+(* Paramètre : la variable globale à analyser *)
+(* Vérifie la bonne utilisation des identifiants et tranforme la variable globale
+   en une variable globale de type AstTds.Declaration *)
+(* Erreur si mauvaise utilisation des identifiants *)
+let analyse_tds_variableG maintds (AstSyntax.DeclarationG (t, n, e)) =
+  match chercherGlobalement maintds n with
+  | None ->
+    (* L'identifiant n'est pas trouvé dans la tds globale,
+        il n'a donc pas été déclaré dans le bloc courant *)
+    (* Vérification de la bonne utilisation des identifiants dans l'expression *)
+    (* et obtention de l'expression transformée *)
+    let ne = analyse_tds_expression maintds e in
+    (* Création de l'information associée à l'identfiant *)
+    let info = InfoVar (n, Undefined, 0, "") in
+    (* Création du pointeur sur l'information *)
+    let ia = ref info in
+    (* Ajout de l'information (pointeur) dans la tds *)
+    ajouter maintds n ia;
+    (* Renvoie de la nouvelle déclaration où le nom a été remplacé par l'information
+        et l'expression remplacée par l'expression issue de l'analyse *)
+    AstTds.Declaration (t, ia, ne)
+  | Some _ ->
+    (* L'identifiant est trouvé dans la tds globale,
+        il a donc déjà été déclaré dans le bloc courant *)
+    raise (DoubleDeclaration n)
+
 (* analyser : AstSyntax.programme -> AstTds.programme *)
 (* Paramètre : le programme à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme le programme
    en un programme de type AstTds.programme *)
 (* Erreur si mauvaise utilisation des identifiants *)
-let analyser (AstSyntax.Programme (fonctions, prog)) =
+let analyser (AstSyntax.Programme (variableGs, fonctions, prog)) =
   (* On crée la TDS mere *)
   let tds = creerTDSMere () in
+  let lvg = List.map (analyse_tds_variableG tds) variableGs in
   let nf = List.map (analyse_tds_fonction tds) fonctions in
   let nb = analyse_tds_bloc tds None prog in
-  AstTds.Programme (nf, nb)
+  AstTds.Programme (lvg, nf, nb)

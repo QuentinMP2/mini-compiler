@@ -11,15 +11,18 @@ type t2 = string
 (* paramètre en_ecriture : on utilise l'affectable dans le cadre d'une ecriture ou d'une lecture *)
 (* paramètre acc : accumulateur de loadi *)
 (* paramètre prof : profondeur des appels en déréférencement *)
-let rec analyse_code_affectable (a : AstPlacement.affectable) en_ecriture acc prof =
+let rec analyse_code_affectable (a : AstPlacement.affectable) en_ecriture acc
+    prof =
   match a with
   | Ident info -> begin
     match !info with
-    | InfoVar (_, t, depl, reg) -> let n = getTaille(type_prof t prof) in
-      loada depl reg ^ acc ^ (if en_ecriture then storei n else loadi n) 
+    | InfoVar (_, t, depl, reg) ->
+      let n = getTaille (type_prof t prof) in
+      loada depl reg ^ acc ^ if en_ecriture then storei n else loadi n
     | _ -> failwith "erreur interne : code_affectable Ident"
   end
-  | Deref aff -> analyse_code_affectable aff en_ecriture (acc ^ loadi 1) (prof + 1)
+  | Deref aff ->
+    analyse_code_affectable aff en_ecriture (acc ^ loadi 1) (prof + 1)
 
 (* AstPlacement.expression -> string *)
 let rec analyse_code_expression (e : AstPlacement.expression) =
@@ -105,7 +108,9 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
   label labelF ^ nli ^ halt
 
 (* AstPlacement.programme -> string *)
-let analyser (AstPlacement.Programme (fonctions, prog)) =
-  getEntete ()
+let analyser (AstPlacement.Programme (lvg_et_taille, fonctions, prog)) =
+  let lvg, _ = lvg_et_taille in
+  let slvg = if lvg = [] then "" else analyse_code_bloc (lvg, 0) in
+  slvg ^ getEntete ()
   ^ List.fold_left (fun acc x -> acc ^ analyse_code_fonction x) "" fonctions
   ^ label "main" ^ analyse_code_bloc prog ^ halt

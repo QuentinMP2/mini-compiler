@@ -1,0 +1,11 @@
+static int x = 0;
+static int* y = &x;
+static int** z = &y;
+static int*** a = &z;
+static int**** b = &a;
+static int***** c = &b;
+
+test {
+    x = 5;
+    print (*(*(*(*(*c)))));
+}

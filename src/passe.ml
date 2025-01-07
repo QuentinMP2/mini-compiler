@@ -21,7 +21,7 @@ module PasseTdsNop :
   type t1 = Ast.AstSyntax.programme
   type t2 = Ast.AstTds.programme
 
-  let analyser _ = Ast.AstTds.Programme ([], [])
+  let analyser _ = Ast.AstTds.Programme ([], [], [])
 end
 
 (* Passe AstTds.programme -> AstType.programme *)
@@ -33,7 +33,7 @@ struct
   type t1 = Ast.AstTds.programme
   type t2 = Ast.AstType.programme
 
-  let analyser _ = Ast.AstType.Programme ([], [])
+  let analyser _ = Ast.AstType.Programme ([], [], [])
 end
 
 (* Passe AstType.programme -> unit *)
@@ -46,7 +46,7 @@ module PassePlacementNop :
   type t1 = Ast.AstType.programme
   type t2 = Ast.AstPlacement.programme
 
-  let analyser _ = Ast.AstPlacement.Programme ([], ([], 0))
+  let analyser _ = Ast.AstPlacement.Programme (([], 0), [], ([], 0))
 end
 
 (* Passe AstPlacement.programme -> string *)
@@ -100,7 +100,8 @@ module VerifPlacement = struct
     | _ -> failwith "Internal error"
 
   (* Renvoie la suite des adresses des variables déclarées dans les fonctions et dans le programme principal *)
-  let analyser (Ast.AstPlacement.Programme (fonctions, (prog, _))) =
-    ("main", List.flatten (List.map analyser_instruction prog))
+  let analyser (Ast.AstPlacement.Programme ((lvg, _), fonctions, (prog, _))) =
+    ("VG", List.flatten (List.map analyser_instruction lvg))
+    :: ("main", List.flatten (List.map analyser_instruction prog))
     :: List.flatten (List.map analyser_fonction fonctions)
 end

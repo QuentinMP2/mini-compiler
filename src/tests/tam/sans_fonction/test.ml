@@ -92,7 +92,7 @@ let%expect_test "complique" =
 let%expect_test "testP1" =
   runtam (pathFichiersRat ^ "testP1.rat");
   [%expect {| 5 |}]
-  
+
 let%expect_test "testP2" =
   runtam (pathFichiersRat ^ "testP2.rat");
   [%expect {| 5 |}]
@@ -108,3 +108,11 @@ let%expect_test "testP4" =
 let%expect_test "testP5" =
   runtam (pathFichiersRat ^ "testP5.rat");
   [%expect {| [3/2] |}]
+
+let%expect_test "testVG1" =
+  runtam (pathFichiersRat ^ "testVG1.rat");
+  [%expect {| 10 |}]
+
+let%expect_test "testVG2" =
+  runtam (pathFichiersRat ^ "testVG2.rat");
+  [%expect {| 5 |}]

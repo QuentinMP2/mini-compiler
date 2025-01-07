@@ -126,7 +126,32 @@ let%test_unit "testRetourP2.rat" =
   try
     let _ = compiler (pathFichiersRat ^ "testRetourP2.rat") in
     raise ErreurNonDetectee
-  with TypeInattendu (Pointeur (Pointeur Bool), Pointeur (Pointeur (Pointeur Bool))) -> ()
+  with
+  | TypeInattendu (Pointeur (Pointeur Bool), Pointeur (Pointeur (Pointeur Bool)))
+  ->
+    ()
+
+let%test_unit "testVG1" =
+  let _ = compiler (pathFichiersRat ^ "testVG1.rat") in
+  ()
+
+let%test_unit "testVG2" =
+  let _ = compiler (pathFichiersRat ^ "testVG2.rat") in
+  ()
+
+let%test_unit "testVG3" =
+  let _ = compiler (pathFichiersRat ^ "testVG3.rat") in
+  ()
+
+let%test_unit "testVG4" =
+  let _ = compiler (pathFichiersRat ^ "testVG4.rat") in
+  ()
+
+let%test_unit "testVG5" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testVG5.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Int, Bool) -> ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix

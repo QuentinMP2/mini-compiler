@@ -1,0 +1,12 @@
+static int* x = (new int);
+
+int instancie(int* y){
+    x = y;
+    return (*y);
+}
+
+test {
+    int y = 4;
+    print instancie(&y);
+    print (*x);
+}

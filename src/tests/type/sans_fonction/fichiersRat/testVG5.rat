@@ -1,0 +1,7 @@
+static int* x = (new int);
+
+test {
+    int y = 4;
+    x = &y;
+    print (*x);
+}

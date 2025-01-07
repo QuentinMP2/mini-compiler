@@ -137,6 +137,26 @@ let%test_unit "testRecursiviteVariable" =
     raise ErreurNonDetectee
   with IdentifiantNonDeclare "x" -> ()
 
+let%test_unit "testVG1" =
+  let _ = compiler (pathFichiersRat ^ "testVG1.rat") in
+  ()
+
+let%test_unit "testVG2" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testVG2.rat") in
+    raise ErreurNonDetectee
+  with DoubleDeclaration "x" -> ()
+
+let%test_unit "testVG3" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testVG3.rat") in
+    raise ErreurNonDetectee
+  with IdentifiantNonDeclare "z" -> ()
+
+let%test_unit "testVG4" =
+  let _ = compiler (pathFichiersRat ^ "testVG4.rat") in
+  ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

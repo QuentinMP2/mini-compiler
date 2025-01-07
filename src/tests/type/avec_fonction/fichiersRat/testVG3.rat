@@ -1,0 +1,11 @@
+static int x = 0;
+
+int calcul (int x) {
+    x = x;
+    return x;
+}
+
+main {
+    x = calcul(x);
+    print x;
+}

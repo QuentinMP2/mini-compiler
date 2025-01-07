@@ -1,0 +1,15 @@
+static int x = 4;
+static int y = x;
+
+int f () {
+    int y = y;
+    int x = 0;
+    x = (x + y);
+    return x;
+}
+
+main {
+    print f ();
+    int a = (x + y);
+    print a;
+}

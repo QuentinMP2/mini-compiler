@@ -1,0 +1,19 @@
+static rat* x = (new rat);
+
+int* f (rat* x) {
+    int a = 0;
+    if (num (*x) = 2) {
+        a = 5;
+    } else {
+        a = 2;      
+    }
+
+    return &a;
+}
+
+main {
+    (*x) = [3/2];
+    int* res = f(x);
+    int x = 4;
+    print (*res);
+}

@@ -45,8 +45,8 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
     | Inf -> "< "
 
   (* Conversion des affectables *)
-  let rec string_of_affectable a = 
-    match a with 
+  let rec string_of_affectable a =
+    match a with
     | Ident n -> n ^ " "
     | Deref aff -> "*" ^ string_of_affectable aff
 
@@ -68,11 +68,10 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
       | _ ->
         string_of_expression e1 ^ string_of_binaire b ^ string_of_expression e2
         ^ " "
-      end
+    end
     | Adresse n -> "&" ^ n
     | New t -> "new " ^ string_of_type t
     | Null -> "null"
-
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
@@ -107,9 +106,14 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
     ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) li ""
     ^ "\n"
 
+  let string_of_variableG (DeclarationG (t, n, e)) =
+    "Declaration globale  : " ^ string_of_type t ^ " " ^ n ^ " = "
+    ^ string_of_expression e ^ "\n"
+
   (* Conversion d'un programme Rat *)
-  let string_of_programme (Programme (fonctions, instruction)) =
-    List.fold_right (fun f tq -> string_of_fonction f ^ tq) fonctions ""
+  let string_of_programme (Programme (lv, fonctions, instruction)) =
+    List.fold_right (fun v tq -> string_of_variableG v ^ tq) lv ""
+    ^ List.fold_right (fun f tq -> string_of_fonction f ^ tq) fonctions ""
     ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) instruction ""
 
   (* Affichage d'un programme Rat *)

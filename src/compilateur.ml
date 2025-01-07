@@ -44,7 +44,7 @@ end
 
 (* + passe de résolution des identifiants *)
 (* module CompilateurRat =
-  Compilateur (PasseTdsRat) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop) *)
+   Compilateur (PasseTdsRat) (PasseTypeNop) (PassePlacementNop) (PasseCodeNop) *)
 
 (* + passe de typage *)
 (* module CompilateurRat =
@@ -54,11 +54,10 @@ end
 (* module CompilateurRat =
    Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat) (PasseCodeNop) *)
 
-
 (* + passe de génération de code -> compilateur complet *)
 module CompilateurRat =
-   Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat)
-     (PasseCodeRatToTam)
+  Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat)
+    (PasseCodeRatToTam)
 
 open Lexing
 
@@ -106,5 +105,5 @@ let compilerVersFichier ratfile tamfile =
 
 (* Permet de faire de la compilation pour voir le fichier tam en sortie *)
 (* let () =
-   compilerVersFichier "tests/tam/sans_fonction/fichiersRat/testP1.rat"
+   compilerVersFichier "tests/tam/avec_fonction/fichiersRat/testVG4.rat"
      "main.tam" *)
