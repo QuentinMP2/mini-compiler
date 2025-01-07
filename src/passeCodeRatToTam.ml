@@ -8,15 +8,16 @@ type t1 = Ast.AstPlacement.programme
 type t2 = string
 
 (* AstPlacement.affectable -> string *)
-let analyse_code_affectable (a : AstPlacement.affectable) en_ecriture =
+let rec analyse_code_affectable (a : AstPlacement.affectable) en_ecriture =
   match a with
   | Ident info -> begin
     match !info with
     | InfoVar (_, t, depl, reg) ->
       if en_ecriture then store (getTaille t) depl reg
       else load (getTaille t) depl reg
-    | _ -> failwith "erreur interne : code_affectable"
+    | _ -> failwith "erreur interne : code_affectable Ident"
   end
+  | Deref aff -> analyse_code_affectable aff false
 
 (* AstPlacement.expression -> string *)
 let rec analyse_code_expression (e : AstPlacement.expression) =
@@ -26,7 +27,7 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
     ^
     match !i with
     | InfoFun (nom, _, _) -> call "SB" nom
-    | _ -> failwith "erreur interne : code_expression"
+    | _ -> failwith "erreur interne : code_expression AppelFonction"
   end
   | Affectable a -> analyse_code_affectable a false
   | Booleen b -> loadl_int (Bool.to_int b)
@@ -48,6 +49,13 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
     | EquBool -> subr "IEq"
     | Inf -> subr "ILss"
   end
+  | Adresse info -> begin
+    match !info with
+    | InfoVar (_, t, depl, reg) -> loada depl reg
+    | _ -> failwith "erreur interne : code_expression Adresse"
+  end
+  | New _ -> call "SB" "Malloc"
+  | Null -> ""
 
 (* AstPlacement.instruction -> string *)
 let rec analyse_code_instruction (i : AstPlacement.instruction) =
@@ -58,7 +66,7 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) =
       push (getTaille t)
       ^ analyse_code_expression e
       ^ store (getTaille t) depl reg
-    | _ -> failwith "erreur interne : code_instruction"
+    | _ -> failwith "erreur interne : code_instruction Declaration"
   end
   | Affectation (a, e) ->
     analyse_code_expression e ^ analyse_code_affectable a true
@@ -98,4 +106,4 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
 let analyser (AstPlacement.Programme (fonctions, prog)) =
   getEntete ()
   ^ List.fold_left (fun acc x -> acc ^ analyse_code_fonction x) "" fonctions
-  ^ "main\n" ^ analyse_code_bloc prog ^ halt
+  ^ label "main" ^ analyse_code_bloc prog ^ halt
