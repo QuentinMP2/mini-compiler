@@ -2,6 +2,7 @@ open Type
 
 (* Interface des arbres abstraits *)
 module type Ast = sig
+  type affectable
   type expression
   type instruction
   type fonction
