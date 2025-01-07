@@ -1,0 +1,7 @@
+test {
+    rat* r = (new rat);
+    rat r1 = [2/4];
+    (*r) = r1;
+    rat r2 = (*r);
+    print r2;
+}

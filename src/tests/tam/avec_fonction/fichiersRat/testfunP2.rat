@@ -1,0 +1,16 @@
+int beautiful(rat r, rat* pr) {
+    if (num r = 4) {
+        (*pr) = [69/2];
+    } else {
+        (*pr) = [3/2];
+    }
+
+    print num (*pr);
+    return 1;
+}
+
+test {
+    rat* raaaaat = (new rat);
+    (*raaaaat) = [4/7];
+    int code_retour = beautiful([4/55], raaaaat);
+}

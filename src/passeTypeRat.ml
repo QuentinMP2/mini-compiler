@@ -88,7 +88,6 @@ let rec analyse_type_expression e =
   | Adresse info -> begin
     match !info with
     | InfoVar(_, t, _, _) ->
-      modifier_type_variable (Pointeur t) info;
       (AstType.Adresse(info), Pointeur(t))
     | _ -> failwith "erreur interne : type_expression - adresse"
   end
@@ -133,7 +132,6 @@ let rec analyse_type_instruction i =
     (* On resout la surcharge d'affichage *)
     match nt with
     | Int -> AstType.AffichageInt ne
-    | Pointeur Int -> AstType.AffichageInt ne
     | Bool -> AstType.AffichageBool ne
     | Rat -> AstType.AffichageRat ne
     | _ -> failwith ("erreur interne : type_instruction - Affichage " ^ (string_of_type nt)) (* Cas normalement impossible *)

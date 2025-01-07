@@ -18,3 +18,7 @@ val est_compatible_list : typ list -> typ list -> bool
 (* getTaille : typ -> int *)
 (* Renvoie la taille en mémoire qui doit prendre une variable en fonction de son type *)
 val getTaille : typ -> int
+
+(* type_prof : typ -> int -> typ *)
+(* Renvoie le type à la profondeur indiquée d'une variable *)
+val type_prof : typ -> int -> typ

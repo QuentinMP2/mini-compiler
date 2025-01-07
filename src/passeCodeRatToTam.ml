@@ -7,17 +7,19 @@ open Code
 type t1 = Ast.AstPlacement.programme
 type t2 = string
 
-(* AstPlacement.affectable -> string *)
-let rec analyse_code_affectable (a : AstPlacement.affectable) en_ecriture =
+(* AstPlacement.affectable -> bool -> string -> int -> string *)
+(* paramètre en_ecriture : on utilise l'affectable dans le cadre d'une ecriture ou d'une lecture *)
+(* paramètre acc : accumulateur de loadi *)
+(* paramètre prof : profondeur des appels en déréférencement *)
+let rec analyse_code_affectable (a : AstPlacement.affectable) en_ecriture acc prof =
   match a with
   | Ident info -> begin
     match !info with
-    | InfoVar (_, t, depl, reg) ->
-      if en_ecriture then store (getTaille t) depl reg
-      else load (getTaille t) depl reg
+    | InfoVar (_, t, depl, reg) -> let n = getTaille(type_prof t prof) in
+      loada depl reg ^ acc ^ (if en_ecriture then storei n else loadi n) 
     | _ -> failwith "erreur interne : code_affectable Ident"
   end
-  | Deref aff -> analyse_code_affectable aff false ^ if en_ecriture then storei 1 else loadi 1
+  | Deref aff -> analyse_code_affectable aff en_ecriture (acc ^ loadi 1) (prof + 1)
 
 (* AstPlacement.expression -> string *)
 let rec analyse_code_expression (e : AstPlacement.expression) =
@@ -29,7 +31,7 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
     | InfoFun (nom, _, _) -> call "SB" nom
     | _ -> failwith "erreur interne : code_expression AppelFonction"
   end
-  | Affectable a -> analyse_code_affectable a false
+  | Affectable a -> analyse_code_affectable a false "" 0
   | Booleen b -> loadl_int (Bool.to_int b)
   | Entier n -> loadl_int n
   | Unaire (op, exp) -> begin
@@ -69,7 +71,7 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) =
     | _ -> failwith "erreur interne : code_instruction Declaration"
   end
   | Affectation (a, e) ->
-    analyse_code_expression e ^ analyse_code_affectable a true
+    analyse_code_expression e ^ analyse_code_affectable a true "" 0
   | AffichageInt e -> analyse_code_expression e ^ subr "IOut"
   | AffichageRat e -> analyse_code_expression e ^ call "SB" "ROut"
   | AffichageBool e -> analyse_code_expression e ^ subr "BOut"

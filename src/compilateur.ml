@@ -105,6 +105,6 @@ let compilerVersFichier ratfile tamfile =
   close_out chan
 
 (* Permet de faire de la compilation pour voir le fichier tam en sortie *)
-let () =
-   compilerVersFichier "tests/tam/avec_fonction/fichiersRat/testfunP1.rat"
-     "main.tam"
+(* let () =
+   compilerVersFichier "tests/tam/sans_fonction/fichiersRat/testP1.rat"
+     "main.tam" *)

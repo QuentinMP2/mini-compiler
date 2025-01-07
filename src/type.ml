@@ -54,3 +54,15 @@ let getTaille t =
 let%test _ = getTaille Int = 1
 let%test _ = getTaille Bool = 1
 let%test _ = getTaille Rat = 2
+
+let rec type_prof t i =
+  if i = 0 then 
+    t 
+  else
+    match t with
+    | Pointeur tt -> type_prof tt (i-1)
+    | Bool -> Bool
+    | Int -> Int
+    | Rat -> Rat
+    | Undefined -> Undefined
+

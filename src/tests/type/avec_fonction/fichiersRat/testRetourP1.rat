@@ -1,11 +1,11 @@
 bool* idiotduvillage(bool* b) {
-    bool b = true;
-    bool * res = &b;
+    bool baba = true;
+    bool * res = &baba;
     if ((*b)) {
         return res;
     } else {
         (*res) = false;
-        (*b) = true;
+        baba = true;
         return res;
     }
 }
