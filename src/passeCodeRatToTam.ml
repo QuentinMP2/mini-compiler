@@ -17,7 +17,7 @@ let rec analyse_code_affectable (a : AstPlacement.affectable) en_ecriture =
       else load (getTaille t) depl reg
     | _ -> failwith "erreur interne : code_affectable Ident"
   end
-  | Deref aff -> analyse_code_affectable aff false
+  | Deref aff -> analyse_code_affectable aff false ^ if en_ecriture then storei 1 else loadi 1
 
 (* AstPlacement.expression -> string *)
 let rec analyse_code_expression (e : AstPlacement.expression) =
@@ -51,10 +51,10 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
   end
   | Adresse info -> begin
     match !info with
-    | InfoVar (_, t, depl, reg) -> loada depl reg
+    | InfoVar (_, _, depl, reg) -> loada depl reg
     | _ -> failwith "erreur interne : code_expression Adresse"
   end
-  | New _ -> call "SB" "Malloc"
+  | New t -> loadl_int (getTaille t) ^ subr "MAlloc"
   | Null -> ""
 
 (* AstPlacement.instruction -> string *)

@@ -133,9 +133,10 @@ let rec analyse_type_instruction i =
     (* On resout la surcharge d'affichage *)
     match nt with
     | Int -> AstType.AffichageInt ne
+    | Pointeur Int -> AstType.AffichageInt ne
     | Bool -> AstType.AffichageBool ne
     | Rat -> AstType.AffichageRat ne
-    | _ -> failwith "erreur interne : type_instruction - Affichage" (* Cas normalement impossible *)
+    | _ -> failwith ("erreur interne : type_instruction - Affichage " ^ (string_of_type nt)) (* Cas normalement impossible *)
   end
   | AstTds.Conditionnelle (c, t, e) ->
     (* On analyse l'expression *)

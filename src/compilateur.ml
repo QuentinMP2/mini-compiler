@@ -54,6 +54,7 @@ end
 (* module CompilateurRat =
    Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat) (PasseCodeNop) *)
 
+
 (* + passe de génération de code -> compilateur complet *)
 module CompilateurRat =
    Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat)
@@ -104,6 +105,6 @@ let compilerVersFichier ratfile tamfile =
   close_out chan
 
 (* Permet de faire de la compilation pour voir le fichier tam en sortie *)
-(* let () =
-   compilerVersFichier "tests/tam/avec_fonction/fichiersRat/testfun6.rat"
-     "main.tam" *)
+let () =
+   compilerVersFichier "tests/tam/avec_fonction/fichiersRat/testfunP1.rat"
+     "main.tam"

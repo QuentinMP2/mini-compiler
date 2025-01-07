@@ -1,0 +1,6 @@
+test {
+    int x = 5;
+    int* y = &x;
+    int z = (*y);
+    print z;
+}
