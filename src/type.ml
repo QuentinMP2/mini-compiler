@@ -27,13 +27,19 @@ let%test _ = not (est_compatible Int Rat)
 let%test _ = not (est_compatible Rat Int)
 let%test _ = not (est_compatible Bool Rat)
 let%test _ = not (est_compatible Rat Bool)
-let%test _ = not (est_compatible Undefined Int)
 let%test _ = not (est_compatible Int Undefined)
 let%test _ = not (est_compatible Rat Undefined)
-let%test _ = not (est_compatible Bool Undefined)
-let%test _ = not (est_compatible Undefined Int)
-let%test _ = not (est_compatible Undefined Rat)
-let%test _ = not (est_compatible Undefined Bool)
+let%test _ = not (est_compatible Rat Bool)
+let%test _ = est_compatible (Pointeur Int) (Pointeur Int)
+let%test _ = est_compatible (Pointeur Bool) (Pointeur Bool)
+let%test _ = est_compatible (Pointeur Rat) (Pointeur Rat)
+let%test _ = est_compatible (Pointeur Rat) (Pointeur Undefined)
+let%test _ = est_compatible (Pointeur Int) (Pointeur Undefined)
+let%test _ = est_compatible (Pointeur Bool) (Pointeur Undefined)
+let%test _ = est_compatible (Pointeur (Pointeur Int)) (Pointeur (Pointeur Int))
+let%test _ = not (est_compatible (Pointeur (Pointeur Int)) (Pointeur (Pointeur Rat)))
+let%test _ = not (est_compatible (Pointeur (Pointeur Int)) Rat)
+
 
 let est_compatible_list lt1 lt2 =
   try List.for_all2 est_compatible lt1 lt2 with Invalid_argument _ -> false
@@ -54,6 +60,9 @@ let getTaille t =
 let%test _ = getTaille Int = 1
 let%test _ = getTaille Bool = 1
 let%test _ = getTaille Rat = 2
+let%test _ = getTaille (Pointeur Bool) = 1
+let%test _ = getTaille (Pointeur Int) = 1
+let%test _ = getTaille (Pointeur Rat) = 1
 
 let rec type_prof t i =
   if i = 0 then 
@@ -66,3 +75,10 @@ let rec type_prof t i =
     | Rat -> Rat
     | Undefined -> Undefined
 
+
+let%test _ = type_prof (Pointeur(Int)) 0 = Pointeur Int
+let%test _ = type_prof (Pointeur(Int)) 1 = Int
+let%test _ = type_prof (Pointeur(Pointeur(Int))) 2 = Int
+let%test _ = type_prof (Pointeur(Pointeur(Int))) 1 = Pointeur Int
+let%test _ = type_prof (Pointeur(Pointeur(Int))) 0 = Pointeur(Pointeur(Int))
+let%test _ = type_prof (Pointeur(Pointeur(Pointeur(Int)))) 3 = Int
