@@ -173,6 +173,21 @@ let rec analyse_type_instruction i =
     (* Cas normalement impossible *)
   end
   | AstTds.Empty -> AstType.Empty
+  | AstTds.StatiqueL (t, info, e) -> begin
+    (* traitement de l'expression *)
+    let ne, nt = analyse_type_expression e in
+    if not (est_compatible t nt) then
+      (* les types sont imcompatibles *)
+      raise (TypeInattendu (nt, t))
+    else
+      (* ajout de l'info du type dans l'info_ast *)
+      match !info with
+      | InfoVar _ ->
+        modifier_type_variable nt info;
+        AstType.StatiqueL (info, ne)
+      | _ -> failwith "erreur interne : type_instruction - declaration"
+    (* Cas normalement impossible *)
+  end
 
 (* analyse_type_bloc : AstTds.bloc -> AstType.bloc *)
 (* Paramètre li : liste d'instructions à analyser *)

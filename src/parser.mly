@@ -63,7 +63,7 @@ prog : lv=var* lf=fonc* ID li=bloc  {Programme (lv,lf,li)}
 
 var : STATIC t=typ n=ID EQUAL e1=e PV          {DeclarationG (t,n,e1)}
 
-fonc : t=typ n=ID PO lp=separated_list(VIRG,param) PF li=bloc {Fonction(t,n,lp,li)}
+fonc : t=typ n=ID PO lp=separated_list(VIRG,param) PF li=bloc {Fonction (t,n,lp,li)}
 
 param : t=typ n=ID  {(t,n)}
 
@@ -77,6 +77,7 @@ i :
 | IF exp=e li1=bloc ELSE li2=bloc   {Conditionnelle (exp,li1,li2)}
 | WHILE exp=e li=bloc               {TantQue (exp,li)}
 | RETURN exp=e PV                   {Retour (exp)}
+| STATIC t=typ n=ID EQUAL e1=e PV  {StatiqueL (t,n,e1)}
 
 typ :
 | BOOL          {Bool}

@@ -105,5 +105,5 @@ let compilerVersFichier ratfile tamfile =
 
 (* Permet de faire de la compilation pour voir le fichier tam en sortie *)
 (* let () =
-   compilerVersFichier "tests/tam/avec_fonction/fichiersRat/testVG4.rat"
+   compilerVersFichier "tests/placement/avec_fonction/fichiersRat/testSL2.rat"
      "main.tam" *)

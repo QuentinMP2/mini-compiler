@@ -1,0 +1,4 @@
+main {
+    static int x = 69;
+    print x;
+}

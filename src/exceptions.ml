@@ -19,3 +19,6 @@ exception DereferencementIllegal
 
 (* Utilisation illégale de return dans le programme principal *)
 exception RetourDansMain
+
+(* Déclaration illégale d'une variable statique locale dans le main *)
+exception StatiqueLDansMain

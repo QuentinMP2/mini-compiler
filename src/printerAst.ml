@@ -95,6 +95,9 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
       ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) b ""
       ^ "\n"
     | Retour e -> "Retour  : RETURN " ^ string_of_expression e ^ "\n"
+    | StatiqueL (t, n, e) ->
+      "StatiqueL  : " ^ string_of_type t ^ " " ^ n ^ " = "
+      ^ string_of_expression e ^ "\n"
 
   (* Conversion des fonctions *)
   let string_of_fonction (Fonction (t, n, lp, li)) =

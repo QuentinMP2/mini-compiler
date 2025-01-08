@@ -1,0 +1,25 @@
+static bool b = false;
+
+bool f() {
+    static bool b = true;
+
+    if (true) {
+        static bool b = true;
+    } else {
+        b = false;
+    }
+
+    return b;
+}
+
+bool g() {
+    static bool b = true;
+    return b;
+}
+
+main {
+    bool b = true;
+    print f();
+    print g();
+    print b;
+}

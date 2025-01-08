@@ -61,10 +61,12 @@ module AstSyntax = struct
     | Affichage of expression
     (* Conditionnelle représentée par la condition, le bloc then et le bloc else *)
     | Conditionnelle of expression * bloc * bloc
-    (*Boucle TantQue représentée par la conditin d'arrêt de la boucle et le bloc d'instructions *)
+    (* Boucle TantQue représentée par la conditin d'arrêt de la boucle et le bloc d'instructions *)
     | TantQue of expression * bloc
-    (* return d'une fonction *)
+    (* Return d'une fonction *)
     | Retour of expression
+    (* Déclaration d'une variable statique locale *)
+    | StatiqueL of typ * string * expression
 
   (* Structure des fonctions de Rat *)
   (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction *)
@@ -118,6 +120,7 @@ module AstTds = struct
     | Retour of expression * Tds.info_ast
       (* les informations sur la fonction à laquelle est associé le retour *)
     | Empty (* les nœuds ayant disparus: Const *)
+    | StatiqueL of typ * Tds.info_ast * expression
 
   (* Structure des fonctions dans notre langage *)
   (* type de retour - informations associées à l'identificateur (dont son nom) - liste des paramètres (association type et information sur les paramètres) - corps de la fonction *)
@@ -179,6 +182,7 @@ module AstType = struct
     | TantQue of expression * bloc
     | Retour of expression * Tds.info_ast
     | Empty (* les nœuds ayant disparus: Const *)
+    | StatiqueL of Tds.info_ast * expression
 
   (* informations associées à l'identificateur (dont son nom), liste des paramètres, corps *)
   type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
@@ -213,6 +217,7 @@ module AstPlacement = struct
     | Retour of
         expression * int * int (* taille du retour et taille des paramètres *)
     | Empty (* les nœuds ayant disparus: Const *)
+    | StatiqueL of Tds.info_ast * expression
 
   (* informations associées à l'identificateur (dont son nom), liste de paramètres, corps, expression de retour *)
   (* Plus besoin de la liste des paramètres mais on la garde pour les tests du placements mémoire *)

@@ -1,0 +1,16 @@
+static rat r = [1/2];
+
+int f(int maisnon) {
+    static int x = 0;
+    x = (x + maisnon);
+
+    bool b = true;
+
+    return x;
+}
+
+main {
+    print f(1);
+    print f(2);
+    print f(3);
+}

@@ -1,0 +1,12 @@
+int f(int whaou) {
+    static int x = 0;
+    x = (x + whaou);
+    return x;
+}
+
+main {
+    rat x = [3/5];
+    print f(1);
+    print f(2);
+    print f(3);
+}

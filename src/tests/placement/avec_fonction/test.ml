@@ -2,6 +2,17 @@ open Rat
 open Compilateur
 open Passe
 
+(* fonction de debug qui permet d'afficher la variable listeAdresse de la fonction getListeDep avec un failwith *)
+let rec toString listeAdresses =
+  let rec aux x =
+    match x with
+    | [] -> ""
+    | (a, (k, s)) :: xs -> a ^ " " ^ string_of_int k ^ " " ^ s ^ ", " ^ aux xs
+  in
+  match listeAdresses with
+  | [] -> ""
+  | (str, l) :: sl -> str ^ " : " ^ aux l ^ toString sl
+
 (* Return la liste des adresses des variables d'un programme RAT *)
 let getListeDep ratfile =
   let input = open_in ratfile in
@@ -135,3 +146,39 @@ let%test "testVG1_main_x" =
 
 let%test "testVG1_f_x" =
   test (pathFichiersRat ^ "testVG1.rat") "f" ("x", 1) (-1, "LB")
+
+let%test "testSL1_f_whaou" =
+  test (pathFichiersRat ^ "testSL1.rat") "f" ("whaou", 1) (-1, "LB")
+
+let%test "testSL1_f_x" =
+  test (pathFichiersRat ^ "testSL1.rat") "f" ("x", 1) (0, "SB")
+
+let%test "testSL1_main_x" =
+  test (pathFichiersRat ^ "testSL1.rat") "main" ("x", 1) (2, "SB")
+
+let%test "testSL2_VG_r" =
+  test (pathFichiersRat ^ "testSL2.rat") "VG" ("r", 1) (0, "SB")
+
+let%test "testSL2_f_maisnon" =
+  test (pathFichiersRat ^ "testSL2.rat") "f" ("maisnon", 1) (-1, "LB")
+
+let%test "testSL2_f_x" =
+  test (pathFichiersRat ^ "testSL2.rat") "f" ("x", 1) (2, "SB")
+
+let%test "testSL2_f_b" =
+  test (pathFichiersRat ^ "testSL2.rat") "f" ("b", 1) (3, "LB")
+
+let%test "testSL3_VG_b" =
+  test (pathFichiersRat ^ "testSL3.rat") "VG" ("b", 1) (0, "SB")
+
+let%test "testSL3_f_b1" =
+  test (pathFichiersRat ^ "testSL3.rat") "f" ("b", 1) (1, "SB")
+
+let%test "testSL3_f_b2" =
+  test (pathFichiersRat ^ "testSL3.rat") "f" ("b", 2) (3, "SB")
+
+let%test "testSL3_g_b" =
+  test (pathFichiersRat ^ "testSL3.rat") "g" ("b", 1) (5, "SB")
+
+let%test "testSL3_main_b" =
+  test (pathFichiersRat ^ "testSL3.rat") "main" ("b", 1) (7, "SB")

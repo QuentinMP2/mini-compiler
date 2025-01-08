@@ -62,15 +62,16 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
   | New t -> loadl_int (getTaille t) ^ subr "MAlloc"
   | Null -> ""
 
-(* AstPlacement.instruction -> string *)
-let rec analyse_code_instruction (i : AstPlacement.instruction) =
+(* AstPlacement.instruction -> bool -> string *)
+(* param est_bloc_VG traitement different pour les variables gobales *)
+let rec analyse_code_instruction (i : AstPlacement.instruction) est_bloc_VG =
   match i with
   | Declaration (info, e) -> begin
     match !info with
     | InfoVar (_, t, depl, reg) ->
-      push (getTaille t)
-      ^ analyse_code_expression e
-      ^ store (getTaille t) depl reg
+      (* On push seulement si on est pas dans le bloc des variables globales auquels cas c'est déjà fait *)
+      let psh = if est_bloc_VG then "" else push (getTaille t) in
+      psh ^ analyse_code_expression e ^ store (getTaille t) depl reg
     | _ -> failwith "erreur interne : code_instruction Declaration"
   end
   | Affectation (a, e) ->
@@ -81,20 +82,39 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) =
   | Conditionnelle (e, bt, be) ->
     let etiquetteE = label (getEtiquette ()) in
     let etiquetteFin = label (getEtiquette ()) in
-    analyse_code_expression e ^ jumpif 0 etiquetteE ^ analyse_code_bloc bt
-    ^ jump etiquetteFin ^ etiquetteE ^ analyse_code_bloc be ^ etiquetteFin
+    analyse_code_expression e ^ jumpif 0 etiquetteE ^ analyse_code_bloc bt false
+    ^ jump etiquetteFin ^ etiquetteE ^ analyse_code_bloc be false ^ etiquetteFin
   | TantQue (e, bloc) ->
     let etiquetteE = label (getEtiquette ()) in
     let etiquetteFin = label (getEtiquette ()) in
     etiquetteE ^ analyse_code_expression e ^ jumpif 0 etiquetteFin
-    ^ analyse_code_bloc bloc ^ jump etiquetteE ^ etiquetteFin
+    ^ analyse_code_bloc bloc false
+    ^ jump etiquetteE ^ etiquetteFin
   | Retour (e, tailleRet, tailleParam) ->
     analyse_code_expression e ^ return tailleRet tailleParam
   | Empty -> "\n"
+  | StatiqueL (info, e) -> begin
+    match !info with
+    | InfoVar (_, t, depl, reg) ->
+      let etiquetteIF = label (getEtiquette ()) in
+      load (getTaille Bool) (depl + getTaille t) reg
+      ^ jumpif 1 etiquetteIF
+      ^ push (getTaille t)
+      ^ analyse_code_expression e
+      ^ store (getTaille t) depl reg
+      ^ push (getTaille Bool)
+      ^ loadl_int 1
+      ^ store (getTaille Bool) (depl + getTaille t) reg
+      ^ etiquetteIF
+    | _ -> failwith "erreur interne : code_instruction Declaration"
+  end
 
-(* AstPlacement.bloc -> string *)
-and analyse_code_bloc (li, taille) =
-  List.fold_left (fun acc i -> acc ^ analyse_code_instruction i) "" li
+(* AstPlacement.bloc -> bool -> string *)
+(* param est_bloc_VG traitement different pour les variables gobales *)
+and analyse_code_bloc (li, taille) est_bloc_VG =
+  List.fold_left
+    (fun acc i -> acc ^ analyse_code_instruction i est_bloc_VG)
+    "" li
   ^ pop 0 taille
 
 (* AstPlacement.fonction -> string *)
@@ -104,13 +124,19 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
     | InfoFun (nom, _, _) -> nom
     | _ -> failwith "erreur interne : code_fonction"
   in
-  let nli = analyse_code_bloc (li, taille) in
+  let nli = analyse_code_bloc (li, taille) false in
   label labelF ^ nli ^ halt
 
 (* AstPlacement.programme -> string *)
-let analyser (AstPlacement.Programme ((lvg, _), fonctions, prog)) =
+let analyser (AstPlacement.Programme ((lvg, emplacement_main), fonctions, prog))
+    =
   (* Permet d'eviter les pop inutiles en debut de code *)
-  let slvg = if lvg = [] then "" else analyse_code_bloc (lvg, 0) in 
+  let slvg =
+    if lvg = [] then ""
+    else push emplacement_main ^ (analyse_code_bloc (lvg, 0)) true
+  in
   slvg ^ getEntete ()
   ^ List.fold_left (fun acc x -> acc ^ analyse_code_fonction x) "" fonctions
-  ^ label "main" ^ analyse_code_bloc prog ^ halt
+  ^ label "main"
+  ^ analyse_code_bloc prog false
+  ^ pop 0 emplacement_main ^ halt

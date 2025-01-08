@@ -1,0 +1,11 @@
+rat f(rat a) {
+    static rat* r = (new rat);
+
+    (*r) = a;
+    return (*r);
+}
+
+main {
+    print f([3/1]);
+    print f([3/1]);
+}

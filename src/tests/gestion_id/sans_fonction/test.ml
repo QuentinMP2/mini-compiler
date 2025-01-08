@@ -157,6 +157,12 @@ let%test_unit "testVG4" =
   let _ = compiler (pathFichiersRat ^ "testVG4.rat") in
   ()
 
+let%test_unit "testSL1" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testSL1.rat") in
+    raise ErreurNonDetectee
+  with StatiqueLDansMain -> ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

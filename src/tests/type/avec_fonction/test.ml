@@ -153,6 +153,20 @@ let%test_unit "testVG5" =
     raise ErreurNonDetectee
   with TypeInattendu (Int, Bool) -> ()
 
+let%test_unit "testSL1" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testSL1.rat") in
+    raise ErreurNonDetectee
+  with TypeInattendu (Int, Bool) -> ()
+
+let%test_unit "testSL2" =
+  let _ = compiler (pathFichiersRat ^ "testSL2.rat") in
+  ()
+
+let%test_unit "testSL3" =
+  let _ = compiler (pathFichiersRat ^ "testSL3.rat") in
+  ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename
