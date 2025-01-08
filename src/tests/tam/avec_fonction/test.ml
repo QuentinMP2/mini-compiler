@@ -87,3 +87,7 @@ let%expect_test "testVG3" =
 let%expect_test "testVG4" =
   runtam (pathFichiersRat ^ "testVG4.rat");
   [%expect {| 44 |}]
+
+let%expect_test "testVG5" =
+  runtam (pathFichiersRat ^ "testVG5.rat");
+  [%expect {| 13574 |}]
