@@ -1,0 +1,10 @@
+int f () {
+    static bool b = true;
+
+    b = 3;
+    return 1;
+}
+
+test {
+    int oulalala = f();
+}
