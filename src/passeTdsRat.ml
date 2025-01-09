@@ -216,18 +216,24 @@ and analyse_tds_bloc tds oia li =
    en une fonction de type AstTds.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyse_tds_fonction maintds (AstSyntax.Fonction (t, n, lp, li)) =
-  (* aux_param : tds -> typ * string -> typ * info_ast *)
+  (* aux_param : tds -> typ * string * expression option -> typ * info_ast *)
   (* Paramètre : la table tds des symboles courante *)
   (* Paramètre : le parametre à analyser à analyser composé de son type et de son nom *)
+  (* Paramètre : la potentielle expression par défaut *)
   (* fonction auxiliaire qui permet de traiter les parametres de la fonction qu'on analyse *)
-  let aux_param tds (tt, nn) =
+  let aux_param tds (tt, nn, dexp) =
     match chercherLocalement tds nn with
     | Some _ -> raise (DoubleDeclaration nn)
     | None ->
+      let ndexp =
+        match dexp with
+        | None -> None
+        | Some e -> Some (analyse_tds_expression tds e)
+      in
       let infoparam = InfoVar (nn, tt, 0, "") in
       let ria = ref infoparam in
       ajouter tds nn ria;
-      (tt, ria)
+      (tt, ria, ndexp)
   in
   (* On cree la TDS fille pour le bloc local *)
   let tds_fonction = creerTDSFille maintds in
@@ -236,7 +242,13 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction (t, n, lp, li)) =
   | Some _ -> raise (DoubleDeclaration n)
   | None ->
     (* On récupère la liste des types qui correspond a la premiere composante de la liste des parametres lp *)
-    let listT = List.map fst lp in
+    let listT =
+      List.map
+        (fun x ->
+          let un, _, _ = x in
+          un)
+        lp
+    in
     (* Place le type de retour et les types des param dans l'info lié à la fonction *)
     let info = InfoFun (n, t, listT) in
     let ia = ref info in

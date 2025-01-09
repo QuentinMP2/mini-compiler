@@ -87,7 +87,7 @@ let analyse_placement_fonction emplSL (AstType.Fonction (info, lp, li)) =
   let rec analyse_placement_param slp =
     match slp with
     | [] -> 0
-    | i :: q -> (
+    | (i,dexp) :: q -> (
       (* On récupère la taille des paramètres suivant celui qu'on considère *)
       let tailleq = analyse_placement_param q in
       match !i with

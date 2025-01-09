@@ -69,8 +69,9 @@ module AstSyntax = struct
     | StatiqueL of typ * string * expression
 
   (* Structure des fonctions de Rat *)
-  (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction *)
-  type fonction = Fonction of typ * string * (typ * string) list * bloc
+  (* type de retour - nom - liste des paramètres (association type, nom et potentielle expression par défaut) - corps de la fonction *)
+  type fonction =
+    | Fonction of typ * string * (typ * string * expression option) list * bloc
 
   (* Variables Globales *)
   (* Déclaration de variable représentée par son type, son nom et l'expression d'initialisation *)
@@ -125,7 +126,11 @@ module AstTds = struct
   (* Structure des fonctions dans notre langage *)
   (* type de retour - informations associées à l'identificateur (dont son nom) - liste des paramètres (association type et information sur les paramètres) - corps de la fonction *)
   type fonction =
-    | Fonction of typ * Tds.info_ast * (typ * Tds.info_ast) list * bloc
+    | Fonction of
+        typ
+        * Tds.info_ast
+        * (typ * Tds.info_ast * expression option) list
+        * bloc
 
   (* Structure d'un programme dans notre langage *)
   (* On transforme le type des variables globales en variables classique car elles ont le même traitement *)
@@ -185,7 +190,7 @@ module AstType = struct
     | StatiqueL of Tds.info_ast * expression
 
   (* informations associées à l'identificateur (dont son nom), liste des paramètres, corps *)
-  type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
+  type fonction = Fonction of Tds.info_ast * (Tds.info_ast * expression option) list * bloc
 
   (* Structure d'un programme dans notre langage *)
   type programme = Programme of bloc * fonction list * bloc
@@ -221,7 +226,8 @@ module AstPlacement = struct
 
   (* informations associées à l'identificateur (dont son nom), liste de paramètres, corps, expression de retour *)
   (* Plus besoin de la liste des paramètres mais on la garde pour les tests du placements mémoire *)
-  type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
+  type fonction =
+    | Fonction of Tds.info_ast * (Tds.info_ast * expression option) list * bloc
 
   (* Structure d'un programme dans notre langage *)
   type programme = Programme of bloc * fonction list * bloc

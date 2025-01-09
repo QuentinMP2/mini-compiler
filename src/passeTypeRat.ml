@@ -203,16 +203,24 @@ and analyse_type_bloc li = List.map analyse_type_instruction li
 (* Erreur si mauvaise utilisation des types *)
 let analyse_type_fonction (AstTds.Fonction (tr, info, lp, li)) =
   let mli = List.map analyse_type_instruction li in
-  let listI : info ref list =
+  let listI =
     List.fold_left
       (fun (* On ajoute le type t à l'info i *)
              acc x ->
-        let t, i = x in
+        let t, i, dexp = x in
+        let ndexp =
+          match dexp with
+          | None -> None
+          | Some e -> begin
+            let ne, te = analyse_type_expression e in
+            if est_compatible t te then Some ne else raise (TypeInattendu (te, t))
+          end
+        in
         match !i with
         | InfoVar _ ->
           (* On modifie le type de la ref i *)
           modifier_type_variable t i;
-          acc @ [ i ]
+          acc @ [ (i, ndexp) ]
         | _ ->
           failwith
             "erreur interne : type_fonction" (* Cas normalement impossible *))
@@ -225,8 +233,6 @@ let analyse_type_fonction (AstTds.Fonction (tr, info, lp, li)) =
   end
   | _ -> failwith "erreur interne : type_fonction - 2"
 
-let analyse_type_fonctions lf = List.map analyse_type_fonction lf
-
 (* analyser : AstTds.programme -> AstType.programme *)
 (* Paramètre : le programme à analyser *)
 (* Place les types dans les info_ast de l'AST et associe les bonnes
@@ -234,6 +240,6 @@ let analyse_type_fonctions lf = List.map analyse_type_fonction lf
 (* Erreur si mauvaise utilisation des types *)
 let analyser (AstTds.Programme (variablesG, fonctions, prog)) =
   let lvg = analyse_type_bloc variablesG in
-  let nfs = analyse_type_fonctions fonctions in
+  let nfs = List.map analyse_type_fonction fonctions in
   let np = analyse_type_bloc prog in
   AstType.Programme (lvg, nfs, np)

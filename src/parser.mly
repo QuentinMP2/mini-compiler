@@ -48,7 +48,7 @@ open Ast.AstSyntax
 %type <fonction> fonc
 %type <instruction> i
 %type <typ> typ
-%type <typ*string> param
+%type <typ*string*(expression option)> param
 %type <expression> e
 %type <affectable> a
 
@@ -65,7 +65,7 @@ var : STATIC t=typ n=ID EQUAL e1=e PV          {DeclarationG (t,n,e1)}
 
 fonc : t=typ n=ID PO lp=separated_list(VIRG,param) PF li=bloc {Fonction (t,n,lp,li)}
 
-param : t=typ n=ID  {(t,n)}
+param : t=typ n=ID d1=d {(t,n,d1)}
 
 bloc : AO li=i* AF      {li}
 
@@ -77,7 +77,7 @@ i :
 | IF exp=e li1=bloc ELSE li2=bloc   {Conditionnelle (exp,li1,li2)}
 | WHILE exp=e li=bloc               {TantQue (exp,li)}
 | RETURN exp=e PV                   {Retour (exp)}
-| STATIC t=typ n=ID EQUAL e1=e PV  {StatiqueL (t,n,e1)}
+| STATIC t=typ n=ID EQUAL e1=e PV   {StatiqueL (t,n,e1)}
 
 typ :
 | BOOL          {Bool}
@@ -87,13 +87,13 @@ typ :
 
 e : 
 | n=ID PO lp=separated_list(VIRG,e) PF   {AppelFonction (n,lp)}
-| CO e1=e SLASH e2=e CF                  {Binaire(Fraction,e1,e2)}
+| CO e1=e SLASH e2=e CF                  {Binaire (Fraction,e1,e2)}
 | a1=a                                   {Affectable a1}
 | TRUE                                   {Booleen true}
 | FALSE                                  {Booleen false}
 | e=ENTIER                               {Entier e}
-| NUM e1=e                               {Unaire(Numerateur,e1)}
-| DENOM e1=e                             {Unaire(Denominateur,e1)}
+| NUM e1=e                               {Unaire (Numerateur,e1)}
+| DENOM e1=e                             {Unaire (Denominateur,e1)}
 | PO e1=e PLUS e2=e PF                   {Binaire (Plus,e1,e2)}
 | PO e1=e MULT e2=e PF                   {Binaire (Mult,e1,e2)}
 | PO e1=e EQUAL e2=e PF                  {Binaire (Equ,e1,e2)}
@@ -106,3 +106,7 @@ e :
 a :
 | n=ID                   {Ident n}
 | PO MULT a1=a PF        {Deref a1}
+
+d :
+| EQUAL e1=e             {Some e1}
+|                        {None}

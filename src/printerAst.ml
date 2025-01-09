@@ -103,7 +103,11 @@ module PrinterAstSyntax : PrinterAst with module A = AstSyntax = struct
   let string_of_fonction (Fonction (t, n, lp, li)) =
     string_of_type t ^ " " ^ n ^ " ("
     ^ List.fold_right
-        (fun (t, n) tq -> string_of_type t ^ " " ^ n ^ " " ^ tq)
+        (fun (t, n, d) tq ->
+          let str_def =
+            match d with None -> "" | Some e -> string_of_expression e
+          in
+          string_of_type t ^ " " ^ n ^ " " ^ str_def ^ tq)
         lp ""
     ^ ") = \n"
     ^ List.fold_right (fun i tq -> string_of_instruction i ^ tq) li ""

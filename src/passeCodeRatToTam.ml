@@ -128,15 +128,11 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
   label labelF ^ nli ^ halt
 
 (* AstPlacement.programme -> string *)
-let analyser (AstPlacement.Programme ((lvg, emplacement_main), fonctions, prog))
-    =
+let analyser (AstPlacement.Programme ((lvg, empl_main), fonctions, prog)) =
   (* Permet d'eviter les pop inutiles en debut de code *)
-  let slvg =
-    if lvg = [] then ""
-    else push emplacement_main ^ (analyse_code_bloc (lvg, 0)) true
-  in
-  slvg ^ getEntete ()
+  let slvg = if lvg = [] then "" else (analyse_code_bloc (lvg, 0)) true in
+  push empl_main ^ slvg ^ getEntete ()
   ^ List.fold_left (fun acc x -> acc ^ analyse_code_fonction x) "" fonctions
   ^ label "main"
   ^ analyse_code_bloc prog false
-  ^ pop 0 emplacement_main ^ halt
+  ^ pop 0 empl_main ^ halt
