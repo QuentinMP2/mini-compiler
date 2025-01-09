@@ -107,3 +107,11 @@ let%expect_test "testSL3" =
 let%expect_test "testSL4" =
   runtam (pathFichiersRat ^ "testSL4.rat");
   [%expect {| 1234 |}]
+
+let%expect_test "testPD1" =
+  runtam (pathFichiersRat ^ "testPD1.rat");
+  [%expect {| 10203040102030410203410234 |}]
+
+let%expect_test "testALL" =
+  runtam (pathFichiersRat ^ "testALL.rat");
+  [%expect {| 457810 |}]

@@ -221,6 +221,16 @@ let%test_unit "testSL3" =
     raise ErreurNonDetectee
   with DoubleDeclaration "x" -> ()
 
+let%test_unit "testPD1" =
+  let _ = compiler (pathFichiersRat ^ "testPD1.rat") in
+  ()
+
+let%test_unit "testPD2" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testPD2.rat") in
+    raise ErreurNonDetectee
+  with ParamDefautPasALaFin -> ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

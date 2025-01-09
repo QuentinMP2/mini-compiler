@@ -1,0 +1,7 @@
+int f(int x = 0, int y) {
+    return x;
+}
+
+main {
+    print f();
+}

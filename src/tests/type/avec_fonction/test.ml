@@ -167,6 +167,26 @@ let%test_unit "testSL3" =
   let _ = compiler (pathFichiersRat ^ "testSL3.rat") in
   ()
 
+let%test_unit "testPD1" =
+  let _ = compiler (pathFichiersRat ^ "testPD1.rat") in
+  ()
+
+let%test_unit "testPD2" =
+  let _ = compiler (pathFichiersRat ^ "testPD2.rat") in
+  ()
+
+let%test_unit "testPD3" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testPD3.rat") in
+    raise ErreurNonDetectee
+  with MauvaisNombreArguments -> ()
+
+let%test_unit "testPD4" =
+  try
+    let _ = compiler (pathFichiersRat ^ "testPD4.rat") in
+    raise ErreurNonDetectee
+  with TypeParamDefautInattendu (Bool, Int) -> ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 open Unix
 open Filename

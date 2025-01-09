@@ -69,7 +69,8 @@ module VerifPlacement = struct
   (* Renvoie l'adresse d'une variable dans le cas d'une déclaration *)
   let rec analyser_instruction i =
     match i with
-    | Ast.AstPlacement.Declaration (info, _) | Ast.AstPlacement.StatiqueL (info, _) -> (
+    | Ast.AstPlacement.Declaration (info, _)
+    | Ast.AstPlacement.StatiqueL (info, _) -> (
       match Tds.info_ast_to_info info with
       | InfoVar (n, _, d, r) -> [ (n, (d, r)) ]
       | _ -> [])
@@ -80,7 +81,7 @@ module VerifPlacement = struct
       List.flatten (List.map analyser_instruction b)
     | _ -> []
 
-  let analyser_param (info, _) =
+  let analyser_param info =
     match Tds.info_ast_to_info info with
     | InfoVar (n, _, d, r) -> [ (n, (d, r)) ]
     | _ -> []

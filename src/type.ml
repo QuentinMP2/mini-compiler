@@ -87,3 +87,14 @@ let%test _ = type_prof (Pointeur (Pointeur Int)) 2 = Int
 let%test _ = type_prof (Pointeur (Pointeur Int)) 1 = Pointeur Int
 let%test _ = type_prof (Pointeur (Pointeur Int)) 0 = Pointeur (Pointeur Int)
 let%test _ = type_prof (Pointeur (Pointeur (Pointeur Int))) 3 = Int
+
+let rec suppr_deb_liste l n =
+  match (n, l) with
+  | 0, _ -> l
+  | _, [] -> []
+  | _, _ :: sl -> suppr_deb_liste sl (n - 1)
+
+let%test _ = suppr_deb_liste [ 1; 2; 3; 4; 5 ] 3 = [ 4; 5 ]
+let%test _ = suppr_deb_liste [ 1; 2; 3; 4; 5 ] 5 = []
+let%test _ = suppr_deb_liste [ 1; 2; 3; 4; 5 ] 10 = []
+let%test _ = suppr_deb_liste [ 1; 2; 3; 4; 5 ] 0 = [ 1; 2; 3; 4; 5 ]

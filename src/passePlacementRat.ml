@@ -87,7 +87,7 @@ let analyse_placement_fonction emplSL (AstType.Fonction (info, lp, li)) =
   let rec analyse_placement_param slp =
     match slp with
     | [] -> 0
-    | (i,dexp) :: q -> (
+    | (i, _) :: q -> (
       (* On récupère la taille des paramètres suivant celui qu'on considère *)
       let tailleq = analyse_placement_param q in
       match !i with
@@ -101,7 +101,8 @@ let analyse_placement_fonction emplSL (AstType.Fonction (info, lp, li)) =
   in
   let _ = analyse_placement_param lp in
   let nb, tb, new_depl_sl = analyse_placement_bloc li 3 "LB" emplSL in
-  (AstPlacement.Fonction (info, lp, (nb, tb)), new_depl_sl)
+  let nlp = List.map fst lp in
+  (AstPlacement.Fonction (info, nlp, (nb, tb)), new_depl_sl)
 
 (* analyser : AstType.programme -> AstPlacement.programme *)
 (* Paramètre : le programme à analyser *)

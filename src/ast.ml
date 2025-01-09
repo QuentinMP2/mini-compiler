@@ -95,7 +95,7 @@ module AstTds = struct
   (* ~ expression de l'AST syntaxique où les noms des identifiants ont été
      remplacés par les informations associées aux identificateurs *)
   type expression =
-    | AppelFonction of Tds.info_ast * expression list
+    | AppelFonction of Tds.info_ast * expression list * expression option list
     | Affectable of affectable
     | Booleen of bool
     | Entier of int
@@ -190,7 +190,8 @@ module AstType = struct
     | StatiqueL of Tds.info_ast * expression
 
   (* informations associées à l'identificateur (dont son nom), liste des paramètres, corps *)
-  type fonction = Fonction of Tds.info_ast * (Tds.info_ast * expression option) list * bloc
+  type fonction =
+    | Fonction of Tds.info_ast * (Tds.info_ast * expression option) list * bloc
 
   (* Structure d'un programme dans notre langage *)
   type programme = Programme of bloc * fonction list * bloc
@@ -226,8 +227,7 @@ module AstPlacement = struct
 
   (* informations associées à l'identificateur (dont son nom), liste de paramètres, corps, expression de retour *)
   (* Plus besoin de la liste des paramètres mais on la garde pour les tests du placements mémoire *)
-  type fonction =
-    | Fonction of Tds.info_ast * (Tds.info_ast * expression option) list * bloc
+  type fonction = Fonction of Tds.info_ast * Tds.info_ast list * bloc
 
   (* Structure d'un programme dans notre langage *)
   type programme = Programme of bloc * fonction list * bloc

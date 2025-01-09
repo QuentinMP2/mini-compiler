@@ -22,3 +22,7 @@ val getTaille : typ -> int
 (* type_prof : typ -> int -> typ *)
 (* Renvoie le type à la profondeur indiquée d'une variable *)
 val type_prof : typ -> int -> typ
+
+(* suppr_deb_liste : 'a list -> int -> list *)
+(* supprime les n premiers elements d'une liste *)
+val suppr_deb_liste : 'a list -> int -> 'a list

@@ -34,25 +34,53 @@ let rec analyse_type_affectable a =
    opérations en fonction des types dans les expressions *)
 (* Erreur si mauvaise utilisation des types *)
 let rec analyse_type_expression e =
+  let aux_decouple l =
+    List.fold_left
+      (fun acc x ->
+        let x1, x2 = x in
+        let acc1, acc2 = acc in
+        (acc1 @ [ x1 ], acc2 @ [ x2 ]))
+      ([], []) l
+  in
   match e with
-  | AstTds.AppelFonction (info, le) -> begin
+  | AstTds.AppelFonction (info, le, liste_param_def) -> begin
     match !info with
     | InfoFun (_, tr, argst) ->
-      (* On analyse la liste des arguments donnés en paramètre à la fonction *)
+      (* On analyse la liste des arguments donnés en paramètre à la fonction couplés aux param par défaut *)
       let list_cpl_ne = List.map analyse_type_expression le in
-      let nle, tp =
-        (* On découple notre liste de couple d'expression et de types *)
-        List.fold_left
-          (fun acc x ->
-            let x1, x2 = x in
-            let acc1, acc2 = acc in
-            (acc1 @ [ x1 ], acc2 @ [ x2 ]))
-          ([], []) list_cpl_ne
+
+      (* On découple notre liste de couple d'expression et de types *)
+      let nle, tp = aux_decouple list_cpl_ne in
+
+      (* On récupère les param par défaut (On les sort de l'Option) *)
+      let nliste_param_def =
+        List.fold_right
+          (fun x acc ->
+            match x with None -> acc | Some paramd -> paramd :: acc)
+          liste_param_def []
       in
-      (* On vérifie que la liste des types des paramètres donné en arguments correspond à ceux attendus *)
-      if est_compatible_list tp argst then
-        (AstType.AppelFonction (info, nle), tr)
-      else raise (TypesParametresInattendus (tp, argst))
+
+      (* On vérifie qu'il y a assez de param par défaut pour palier au manque d'arguments *)
+      let tailleParam = List.length argst in
+      let tailleParamDef = List.length nliste_param_def in
+      let tailleArgs = List.length tp in
+      if tailleArgs + tailleParamDef < tailleParam && tailleParamDef <> 0 then
+        raise MauvaisNombreArguments
+      else
+        (* on récupère les paramètres par défaut qui vont être utilisés *)
+        let used_liste_param_def =
+          suppr_deb_liste nliste_param_def
+            (tailleParamDef - (tailleParam - tailleArgs))
+        in
+        let suite_nle, suite_tp =
+          aux_decouple (List.map analyse_type_expression used_liste_param_def)
+        in
+        let final_nle = nle @ suite_nle in
+        let final_tp = tp @ suite_tp in
+        (* On vérifie que la liste des types des paramètres donné en arguments correspond à ceux attendus *)
+        if est_compatible_list final_tp argst then
+          (AstType.AppelFonction (info, final_nle), tr)
+        else raise (TypesParametresInattendus (tp, argst))
     | _ -> failwith "erreur interne : type_expression - appel fonction"
     (* Cas normalement impossible *)
   end
@@ -213,7 +241,8 @@ let analyse_type_fonction (AstTds.Fonction (tr, info, lp, li)) =
           | None -> None
           | Some e -> begin
             let ne, te = analyse_type_expression e in
-            if est_compatible t te then Some ne else raise (TypeInattendu (te, t))
+            if est_compatible t te then Some ne
+            else raise (TypeParamDefautInattendu (te, t))
           end
         in
         match !i with
