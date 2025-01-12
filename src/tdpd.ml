@@ -25,6 +25,39 @@ let recupTDPD nomf tdpd =
   | Some lpd -> lpd
   | None -> failwith "erreur interne : recupTDPD"
 
+(* TESTS *)
+let%test _ =
+  let tdpd = creerTDPD () in
+  let liste_de_param_defaut1 =
+    [ None; Some (AstTds.Entier 3); Some (AstTds.Booleen true) ]
+  in
+  let liste_de_param_defaut2 =
+    [
+      Some (AstTds.Binaire (Fraction, AstTds.Entier 1, AstTds.Entier 2));
+      Some (AstTds.Booleen true);
+      Some (AstTds.Booleen true);
+    ]
+  in
+  ajouterTDPD "f" liste_de_param_defaut1 tdpd;
+  ajouterTDPD "g" liste_de_param_defaut2 tdpd;
+  recupTDPD "f" tdpd = liste_de_param_defaut1
+
+let%test _ =
+  let tdpd = creerTDPD () in
+  let liste_de_param_defaut1 =
+    [ None; Some (AstTds.Entier 3); Some (AstTds.Booleen true) ]
+  in
+  let liste_de_param_defaut2 =
+    [
+      Some (AstTds.Binaire (Fraction, AstTds.Entier 1, AstTds.Entier 2));
+      Some (AstTds.Booleen true);
+      Some (AstTds.Booleen true);
+    ]
+  in
+  ajouterTDPD "f" liste_de_param_defaut1 tdpd;
+  ajouterTDPD "g" liste_de_param_defaut2 tdpd;
+  recupTDPD "g" tdpd = liste_de_param_defaut2
+
 (* toString : tdpd -> string *)
 (* Paramètre tdpd : la table des paramètres par défaut *)
 let toString (tdpd : tdpd) =
@@ -43,6 +76,7 @@ let toString (tdpd : tdpd) =
       ^ "/")
     tdpd ""
 
+(* TESTS *)
 let%test _ =
   let tdpd = creerTDPD () in
   ajouterTDPD "f" [ Some (AstTds.Entier 3); Some (AstTds.Booleen true) ] tdpd;
