@@ -14,7 +14,7 @@ let rec est_compatible t1 t2 =
   | Int, Int -> true
   | Rat, Rat -> true
   | Undefined, _ -> true
-  | Pointeur _, Pointeur Undefined -> true
+  | Pointeur _, Pointeur Undefined -> true        (* car null est de type Pointeur Undefined *)
   | Pointeur x, Pointeur y -> est_compatible x y
   | _ -> false
 
@@ -76,10 +76,7 @@ let rec type_prof t i =
   else
     match t with
     | Pointeur tt -> type_prof tt (i - 1)
-    | Bool -> Bool
-    | Int -> Int
-    | Rat -> Rat
-    | Undefined -> Undefined
+    | _ -> failwith "Profondeur donnée trop importante"
 
 let%test _ = type_prof (Pointeur Int) 0 = Pointeur Int
 let%test _ = type_prof (Pointeur Int) 1 = Int

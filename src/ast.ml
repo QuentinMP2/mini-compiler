@@ -157,7 +157,9 @@ module AstType = struct
 
   (* Affectables existants dans Rat *)
   (* = affectable de AstTds *)
-  type affectable = Ident of Tds.info_ast | Deref of affectable
+  type affectable = 
+    | Ident of Tds.info_ast 
+    | Deref of affectable
 
   (* Expressions existantes dans Rat *)
   (* = expression de AstTds *)
@@ -221,7 +223,7 @@ module AstPlacement = struct
     | Conditionnelle of expression * bloc * bloc
     | TantQue of expression * bloc
     | Retour of
-        expression * int * int (* taille du retour et taille des paramètres *)
+        expression * int * int (* taille de retour et taille des paramètres *)
     | Empty (* les nœuds ayant disparus: Const *)
     | StatiqueL of Tds.info_ast * expression
 

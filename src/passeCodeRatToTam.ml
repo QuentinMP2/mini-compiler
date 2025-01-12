@@ -8,6 +8,7 @@ type t1 = Ast.AstPlacement.programme
 type t2 = string
 
 (* AstPlacement.affectable -> bool -> string -> int -> string *)
+(* paramètre a : l'affectable à analyser *)
 (* paramètre en_ecriture : on utilise l'affectable dans le cadre d'une ecriture ou d'une lecture *)
 (* paramètre acc : accumulateur de loadi *)
 (* paramètre prof : profondeur des appels en déréférencement *)
