@@ -74,11 +74,11 @@ module AstSyntax = struct
     | Fonction of typ * string * (typ * string * expression option) list * bloc
 
   (* Variables Globales *)
-  (* Déclaration de variable représentée par son type, son nom et l'expression d'initialisation *)
+  (* Déclaration de variable globale représentée par son type, son nom et l'expression d'initialisation *)
   type variableG = DeclarationG of typ * string * expression
 
   (* Structure d'un programme Rat *)
-  (* liste de fonction - programme principal *)
+  (* liste des variables globales - liste de fonction - programme principal *)
   type programme = Programme of variableG list * fonction list * bloc
 end
 

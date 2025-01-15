@@ -64,7 +64,7 @@ let rec analyse_code_expression (e : AstPlacement.expression) =
   | Null -> ""
 
 (* AstPlacement.instruction -> bool -> string *)
-(* param est_bloc_VG traitement different pour les variables gobales *)
+(* Paramètre est_bloc_VG : traitement different pour les variables gobales *)
 let rec analyse_code_instruction (i : AstPlacement.instruction) est_bloc_VG =
   match i with
   | Declaration (info, e) -> begin
@@ -115,7 +115,7 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) est_bloc_VG =
   end
 
 (* AstPlacement.bloc -> bool -> string *)
-(* param est_bloc_VG traitement different pour les variables gobales *)
+(* Paramètre est_bloc_VG : traitement différent pour les variables gobales *)
 and analyse_code_bloc (li, taille) est_bloc_VG =
   List.fold_left
     (fun acc i -> acc ^ analyse_code_instruction i est_bloc_VG)
@@ -134,7 +134,7 @@ let analyse_code_fonction (AstPlacement.Fonction (info, _, (li, taille))) =
 
 (* AstPlacement.programme -> string *)
 let analyser (AstPlacement.Programme ((lvg, empl_main), fonctions, prog)) =
-  (* Permet d'eviter les pop inutiles en debut de code *)
+  (* Permet d'éviter les pop inutiles en debut de code *)
   let slvg = if lvg = [] then "" else (analyse_code_bloc (lvg, 0)) true in
   push empl_main ^ slvg ^ getEntete ()
   ^ List.fold_left (fun acc x -> acc ^ analyse_code_fonction x) "" fonctions
