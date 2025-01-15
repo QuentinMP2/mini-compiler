@@ -97,8 +97,7 @@ let analyse_placement_fonction emplSL (AstType.Fonction (info, lp, li)) =
         (* On modifie son adresse par effet de bord *)
         modifier_adresse_variable (-(taillei + tailleq)) "LB" i;
         tailleq + taillei
-      | _ -> failwith "erreur interne : placement_param"
-    )
+      | _ -> failwith "erreur interne : placement_param")
   in
   let _ = analyse_placement_param lp in
   let nb, tb, new_depl_sl = analyse_placement_bloc li 3 "LB" emplSL in

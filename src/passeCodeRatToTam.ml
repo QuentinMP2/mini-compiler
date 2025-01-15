@@ -98,11 +98,15 @@ let rec analyse_code_instruction (i : AstPlacement.instruction) est_bloc_VG =
     match !info with
     | InfoVar (_, t, depl, reg) ->
       let etiquetteIF = label (getEtiquette ()) in
+      (* On teste si la variable statique est déjà initialisé *)
       load (getTaille Bool) (depl + getTaille t) reg
+      (* Si c'est le cas on saute cette étape *)
       ^ jumpif 1 etiquetteIF
+      (* Sinon on l'initialise *)
       ^ push (getTaille t)
       ^ analyse_code_expression e
       ^ store (getTaille t) depl reg
+      (* Et on met un booleen à vrai pour notifier l'initialisation *)
       ^ push (getTaille Bool)
       ^ loadl_int 1
       ^ store (getTaille Bool) (depl + getTaille t) reg

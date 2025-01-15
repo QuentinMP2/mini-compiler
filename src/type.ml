@@ -14,7 +14,8 @@ let rec est_compatible t1 t2 =
   | Int, Int -> true
   | Rat, Rat -> true
   | Undefined, _ -> true
-  | Pointeur _, Pointeur Undefined -> true        (* car null est de type Pointeur Undefined *)
+  | Pointeur _, Pointeur Undefined ->
+    true (* car null est de type Pointeur Undefined *)
   | Pointeur x, Pointeur y -> est_compatible x y
   | _ -> false
 
