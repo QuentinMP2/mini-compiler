@@ -1,0 +1,34 @@
+static int global_result = 0;
+
+int add(int value, int* result) {
+    static int accumulator = 0;
+    accumulator = (accumulator + value);
+    (*result) = accumulator;
+    return accumulator;
+}
+
+int multiply(int a, int b, int* result) {
+    (*result) = (a * b);
+    return (*result);
+}
+
+int calculate(int* final_result) {
+    int temp_result = 0;
+
+    int a1 = add(5, &temp_result);
+    int a2 = add(10, &temp_result);
+    int a3 = add(15, &temp_result);
+
+    int resultat = multiply(temp_result, 2, final_result);
+
+    global_result = (*final_result);
+    return global_result;
+}
+
+main {
+    int* temp = (new int);
+    (*temp) = 0;
+    int final_result = calculate(temp);
+
+    print final_result;
+}
